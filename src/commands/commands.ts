@@ -1,8 +1,6 @@
 import {
   AutocompleteInteraction,
-  AutocompleteFocusedOption,
   ChatInputCommandInteraction,
-  CommandInteraction,
   ModalSubmitInteraction,
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,

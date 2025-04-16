@@ -6,17 +6,13 @@
   "scripts": {
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "build-old": "tsc --project tsconfig.json",
-    "commands:view": "npm run build && node --enable-source-maps dist/view-commands.js commands view",
-    "commands:register": "npm run build && node --enable-source-maps dist/register-commands.js commands register",
-    "commands:clear": "npm run build && node --enable-source-maps dist/clear-commands.js commands clear",
-    "start-old": "npm run start:bot",
     "dev": "tsx watch src/index.ts",
     "deploy-commands": "tsx src/deployCommands.ts",
-    "build": "tsup src/index.ts --minify",
-    "start": "ts-node src/index.ts",
-    "migrate": "sequelize db:migrate",
-    "migration:generate": "sequelize-typescript-migration generate -o src/migrations -c src/config/database.ts"
+    "reset": "rimraf node_modules package-lock.json && npm install",
+    "build": "tsc",
+    "migrate": "sequelize-cli db:migrate --config sequelize.config.js",
+    "migrate:undo": "sequelize-cli db:migrate:undo --config sequelize.config.js",
+    "start": "npm run migrate && npm run dev"
   },
   "author": "Igor H. T. Ruy",
   "dependencies": {
@@ -25,11 +21,13 @@
     "dotenv": "^16.5.0",
     "mysql2": "^3.14.0",
     "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2",
     "sequelize-typescript": "^2.1.6",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
+    "rimraf": "^6.0.1",
     "sequelize-typescript-migration": "^0.0.1-beta.3",
     "ts-node": "^10.9.2",
     "tsup": "^8.4.0",

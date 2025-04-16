@@ -1,7 +1,6 @@
 import { Client, Events } from "discord.js";
 import { deployCommands } from "./deployCommands";
 import { commands } from "./commands";
-import { config } from "./config/config";
 
 export const client = new Client({
   intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
@@ -16,11 +15,8 @@ client.on(Events.GuildCreate, async (guild) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
-  console.log("Nova interação recebida: ", interaction.type);
   if (interaction.isChatInputCommand()) {
-    console.log("Comando recebido:", interaction.commandName);
     const command = commands[interaction.commandName];
-    console.log("Comando recebido:", command);
     if (command) {
       await command.execute(interaction);
     }
@@ -28,7 +24,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   if (interaction.isAutocomplete()) {
     const command = commands[interaction.commandName];
-    console.log("command", command)
     if (command?.autocomplete) {
       const focused = interaction.options.getFocused(true);
       await command.autocomplete(interaction);

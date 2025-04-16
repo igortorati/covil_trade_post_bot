@@ -1,38 +1,34 @@
 import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  ActionRowBuilder,
+  TextInputComponent,
+  ModalSubmitInteraction,
+  TextChannel,
+  NewsChannel,
+  DMChannel,
+  ThreadChannel,
   AutocompleteInteraction,
-  ApplicationCommandOptionChoiceData,
 } from "discord.js";
 import { Command } from "../commands";
 
-enum Frutas {
-  MACA = "Maçã",
-  BANANA = "Banana",
-  UVA = "Uva",
-  LARANJA = "Laranja",
-  MANGA = "Manga",
-  ABACAXI = "Abacaxi",
-  MORANGO = "Morango",
+enum Personagens {
+  NARUTO = "Naruto Uzumaki",
+  SASUKE = "Sasuke Uchiha",
+  SAKURA = "Sakura Haruno",
+  KAKASHI = "Kakashi Hatake",
 }
 
-enum Cores {
-  VERMELHO = "Vermelho",
-  AZUL = "Azul",
-  VERDE = "Verde",
-  AMARELO = "Amarelo",
-  PRETO = "Preto",
-  BRANCO = "Branco",
-  CINZA = "Cinza",
-}
-
-enum Animais {
-  GATO = "Gato",
-  CACHORRO = "Cachorro",
-  PASSARO = "Pássaro",
-  PEIXE = "Peixe",
-  CAVALO = "Cavalo",
-  TIGRE = "Tigre",
+enum Itens {
+  KUNAI = "Kunai",
+  SHURIKEN = "Shuriken",
+  MAKIMONO = "Pergaminho Secreto",
+  RAMEN = "Ramen do Ichiraku",
+  BYAKUGAN = "Byakugan Falso",
+  SHARINGAN = "Sharingan de Vidro",
 }
 
 export default class TradeCommand implements Command {
@@ -41,65 +37,57 @@ export default class TradeCommand implements Command {
     .setDescription("Envie uma sugestão para o servidor")
     .addStringOption(option =>
       option
-        .setName("fruta")
-        .setDescription("Escolha uma fruta")
+        .setName("personagem")
+        .setDescription("Escolha um personagem")
         .setAutocomplete(true)
         .setRequired(true)
     )
     .addStringOption(option =>
       option
-        .setName("cor")
-        .setDescription("Escolha uma cor")
+        .setName("item_desejado")
+        .setDescription("Item que você deseja receber")
         .setAutocomplete(true)
         .setRequired(true)
     )
     .addStringOption(option =>
       option
-        .setName("animal")
-        .setDescription("Escolha um animal")
+        .setName("item_oferecido")
+        .setDescription("Item que você oferece na troca")
         .setAutocomplete(true)
         .setRequired(true)
     );
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const frutaSelecionada = interaction.options.getString("fruta", true);
-    const corSelecionada = interaction.options.getString("cor", true);
-    const animalSelecionado = interaction.options.getString("animal", true);
+    const personagem = interaction.options.getString("personagem", true);
+    const itemDesejado = interaction.options.getString("item_desejado", true);
+    const itemOferecido = interaction.options.getString("item_oferecido", true);
 
-    await interaction.reply({
-      content: `Sugestão enviada com as seguintes escolhas:\n🍉 Fruta: **${frutaSelecionada}**\n🎨 Cor: **${corSelecionada}**\n🐾 Animal: **${animalSelecionado}**`,
-    });
+    await interaction.reply(
+      `🌀 **Troca registrada**\n👤 Personagem: **${personagem}**\n📥 Item desejado: **${itemDesejado}**\n📤 Item oferecido: **${itemOferecido}**`
+    );
   }
 
   async autocomplete(interaction: AutocompleteInteraction): Promise<void> {
-    const focusedOption = interaction.options.getFocused(true);
-    const query = focusedOption.value.toLowerCase();
-    const name = focusedOption.name;
-  
-    let choices: { name: string, value: string }[] = [];
-  
-    switch (name) {
-      case "fruta":
-        choices = Object.entries(Frutas)
+    const focused = interaction.options.getFocused(true);
+    const query = interaction.options.getFocused(true).value.toLowerCase();
+    let choices: { name: string; value: string }[] = [];
+
+    switch (focused.name) {
+      case "personagem":
+        choices = Object.entries(Personagens)
           .map(([key, name]) => ({ name, value: key }))
           .filter(choice => choice.name.toLowerCase().includes(query))
           .slice(0, 25);
         break;
-      case "cor":
-        choices = Object.entries(Cores)
-          .map(([key, name]) => ({ name, value: key }))
-          .filter(choice => choice.name.toLowerCase().includes(query))
-          .slice(0, 25);
-        break;
-      case "animal":
-        choices = Object.entries(Animais)
+      case "item_desejado":
+      case "item_oferecido":
+        choices = Object.entries(Itens)
           .map(([key, name]) => ({ name, value: key }))
           .filter(choice => choice.name.toLowerCase().includes(query))
           .slice(0, 25);
         break;
     }
-  
+
     await interaction.respond(choices);
   }
-  
 }
