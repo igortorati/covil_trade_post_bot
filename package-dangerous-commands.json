@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "migrate:undo": "sequelize-cli db:migrate:undo --config sequelize.config.js",
+    "migrate:undo:all": "sequelize-cli db:migrate:undo:all --config sequelize.config.js",
+    "start-from-scratch": "npm run migrate:undo:all && npm run migrate && npm run seed:all && npm run start"
+  }
+}

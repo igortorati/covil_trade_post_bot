@@ -1,0 +1,320 @@
+[
+  {
+    "source": "PHB",
+    "name": "Player's Handbook (2014)",
+    "published": "2014-08-19",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "MM",
+    "name": "Monster Manual (2014)",
+    "published": "2014-09-30",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "DMG",
+    "name": "Dungeon Master's Guide (2014)",
+    "published": "2014-12-09",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "Screen",
+    "name": "Dungeon Master's Screen",
+    "published": "2015-01-20",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "SCAG",
+    "name": "Sword Coast Adventurer's Guide",
+    "published": "2015-11-03",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "PSZ",
+    "name": "Plane Shift: Zendikar",
+    "published": "2016-04-27",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "PSI",
+    "name": "Plane Shift: Innistrad",
+    "published": "2016-07-12",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "AL",
+    "name": "Adventurers League",
+    "published": "2016-08-26",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "VGM",
+    "name": "Volo's Guide to Monsters",
+    "published": "2016-11-15",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "PSK",
+    "name": "Plane Shift: Kaladesh",
+    "published": "2017-02-16",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "PSA",
+    "name": "Plane Shift: Amonkhet",
+    "published": "2017-07-06",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "OGA",
+    "name": "One Grung Above",
+    "published": "2017-10-11",
+    "author": "Extra Life"
+  },
+  {
+    "source": "XGE",
+    "name": "Xanathar's Guide to Everything",
+    "published": "2017-11-21",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "PSX",
+    "name": "Plane Shift: Ixalan",
+    "published": "2018-01-09",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "MTF",
+    "name": "Mordenkainen's Tome of Foes",
+    "published": "2018-05-29",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "PSD",
+    "name": "Plane Shift: Dominaria",
+    "published": "2018-07-31",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "GGR",
+    "name": "Guildmasters' Guide to Ravnica",
+    "published": "2018-11-20",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "SAC",
+    "name": "Sage Advice Compendium",
+    "published": "2019-01-31",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "AI",
+    "name": "Acquisitions Incorporated",
+    "published": "2019-06-18",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "RMR",
+    "name": "Dungeons & Dragons vs. Rick and Morty: Basic Rules",
+    "published": "2019-11-19",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "ERLW",
+    "name": "Eberron: Rising from the Last War",
+    "published": "2019-11-19",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "EGW",
+    "name": "Explorer's Guide to Wildemount",
+    "published": "2020-03-17",
+    "author": "Darrington Press"
+  },
+  {
+    "source": "MOT",
+    "name": "Mythic Odysseys of Theros",
+    "published": "2020-06-02",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "ScreenDungeonKit",
+    "name": "Dungeon Master's Screen: Dungeon Kit",
+    "published": "2020-09-21",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "HF",
+    "name": "Heroes' Feast",
+    "published": "2020-10-27",
+    "author": "Kyle Newman"
+  },
+  {
+    "source": "ScreenWildernessKit",
+    "name": "Dungeon Master's Screen: Wilderness Kit",
+    "published": "2020-11-17",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "TCE",
+    "name": "Tasha's Cauldron of Everything",
+    "published": "2020-11-17",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "VRGR",
+    "name": "Van Richten's Guide to Ravenloft",
+    "published": "2021-05-18",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "DoD",
+    "name": "Domains of Delight",
+    "published": "2021-09-21",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "MaBJoV",
+    "name": "Minsc and Boo's Journal of Villainy",
+    "published": "2021-10-05",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "FTD",
+    "name": "Fizban's Treasury of Dragons",
+    "published": "2021-10-26",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "SCC",
+    "name": "Strixhaven: A Curriculum of Chaos",
+    "published": "2021-12-07",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "TDCSR",
+    "name": "Tal'Dorei Campaign Setting Reborn",
+    "published": "2022-01-18",
+    "author": "Darrington Press"
+  },
+  {
+    "source": "MPMM",
+    "name": "Mordenkainen Presents: Monsters of the Multiverse",
+    "published": "2022-01-25",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "TD",
+    "name": "Tarot Deck",
+    "published": "2022-05-24",
+    "author": "Clarkson Potter"
+  },
+  {
+    "source": "AAG",
+    "name": "Astral Adventurer's Guide",
+    "published": "2022-08-16",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "BAM",
+    "name": "Boo's Astral Menagerie",
+    "published": "2022-08-16",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "ScreenSpelljammer",
+    "name": "Dungeon Master's Screen: Spelljammer",
+    "published": "2022-08-16",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "HAT-TG",
+    "name": "Thieves' Gallery",
+    "published": "2023-03-06",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "ToB1-2023",
+    "name": "Tome of Beasts 1 (2023 Edition)",
+    "published": "2023-05-31",
+    "author": "Kobold Press"
+  },
+  {
+    "source": "BGG",
+    "name": "Bigby Presents: Glory of the Giants",
+    "published": "2023-08-15",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "MCV4EC",
+    "name": "Monstrous Compendium Volume 4: Eldraine Creatures",
+    "published": "2023-09-21",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "MPP",
+    "name": "Morte's Planar Parade",
+    "published": "2023-10-07",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "SatO",
+    "name": "Sigil and the Outlands",
+    "published": "2023-10-07",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "AATM",
+    "name": "Adventure Atlas: The Mortuary",
+    "published": "2023-10-17",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "HFFotM",
+    "name": "Heroes' Feast Flavors of the Multiverse",
+    "published": "2023-11-07",
+    "author": "Kyle Newman"
+  },
+  {
+    "source": "BMT",
+    "name": "The Book of Many Things",
+    "published": "2023-11-14",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "DMTCRG",
+    "name": "The Deck of Many Things: Card Reference Guide",
+    "published": "2023-11-14",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "PaF",
+    "name": "Puncheons and Flagons",
+    "published": "2024-08-27",
+    "author": "Andrew Wheeler"
+  },
+  {
+    "source": "XPHB",
+    "name": "Player's Handbook (2024)",
+    "published": "2024-09-17",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "XDMG",
+    "name": "Dungeon Master's Guide (2024)",
+    "published": "2024-11-12",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "XScreen",
+    "name": "Dungeon Master's Screen (2024)",
+    "published": "2024-11-12",
+    "author": "Wizards RPG Team"
+  },
+  {
+    "source": "XMM",
+    "name": "Monster Manual (2025)",
+    "published": "2025-02-18",
+    "author": "Wizards RPG Team"
+  }
+]

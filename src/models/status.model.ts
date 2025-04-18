@@ -1,10 +1,10 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({ tableName: 'statuses', timestamps: false })
-export class Status extends Model {
-  @Column({ primaryKey: true, autoIncrement: true })
+export default class Status extends Model<Status> {
+  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id!: number;
 
-  @Column({ unique: true })
+  @Column({ type: DataType.STRING(50), allowNull: false, unique: true })
   name!: string;
 }

@@ -11,8 +11,14 @@
     "reset": "rimraf node_modules package-lock.json && npm install",
     "build": "tsc",
     "migrate": "sequelize-cli db:migrate --config sequelize.config.js",
-    "migrate:undo": "sequelize-cli db:migrate:undo --config sequelize.config.js",
-    "start": "npm run migrate && npm run dev"
+    "start": "npm run migrate && npm run dev",
+    "seed:all": "npm run seed:sources && npm run seed:rarities && npm run seed:items",
+    "seed:sources": "ts-node src/seeders/seedSources.ts",
+    "seed:items": "ts-node src/seeders/seedItems.ts",
+    "seed:rarities": "ts-node src/seeders/seedRarities.ts",
+    "clean:sources": "tsx src/scripts/cleanBooks.ts",
+    "clean:items": "tsx src/scripts/cleanItems.ts",
+    "start-from-scratch": "npm run migrate && npm run seed:all && npm run start"
   },
   "author": "Igor H. T. Ruy",
   "dependencies": {
@@ -20,6 +26,7 @@
     "discord.js-rate-limiter": "^1.3.2",
     "dotenv": "^16.5.0",
     "mysql2": "^3.14.0",
+    "prettier": "^3.5.3",
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.2",
     "sequelize-typescript": "^2.1.6",

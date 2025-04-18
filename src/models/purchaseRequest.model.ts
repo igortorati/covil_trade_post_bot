@@ -1,27 +1,31 @@
-import { Column, Model, Table, ForeignKey, BelongsTo } from 'sequelize-typescript';
-import { Character } from './character.model';
-import { Item } from './item.model';
-import { Status } from './status.model';
+import { Column, Model, Table, ForeignKey, BelongsTo, DataType } from 'sequelize-typescript';
+import Character from './character.model';
+import Item from './item.model';
+import Status from './status.model';
 
-@Table({ tableName: 'purchase_requests', timestamps: true })
-export class PurchaseRequest extends Model {
+@Table({ tableName: 'purchase_requests' })
+export default class PurchaseRequest extends Model<PurchaseRequest> {
+  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
+  id!: number;
+
   @ForeignKey(() => Character)
-  @Column
-  characterId!: number;
-
-  @BelongsTo(() => Character)
-  character!: Character;
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  character_id!: number;
 
   @ForeignKey(() => Item)
-  @Column
-  itemId!: number;
-
-  @BelongsTo(() => Item)
-  item!: Item;
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  item_id!: number;
 
   @ForeignKey(() => Status)
-  @Column
-  statusId!: number;
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  status_id!: number;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+  })
+  created_at!: Date;
 
   @BelongsTo(() => Status)
   status!: Status;

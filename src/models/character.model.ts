@@ -1,13 +1,13 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({ tableName: 'characters', timestamps: false })
-export class Character extends Model {
-  @Column({ primaryKey: true, autoIncrement: true })
+export default class Character extends Model<Character> {
+  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id!: number;
 
-  @Column({ field: 'discord_id', allowNull: false })
-  discordId!: string;
-
-  @Column({ allowNull: false })
+  @Column({ type: DataType.STRING(100), allowNull: false })
   name!: string;
+
+  @Column({ type: DataType.STRING(100), allowNull: false })
+  discord_id!: string;
 }

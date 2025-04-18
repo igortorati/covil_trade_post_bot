@@ -5,22 +5,62 @@ module.exports = {
     // Tabela de temporadas
     await queryInterface.createTable('seasons', {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-      version: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+      season: { type: DataTypes.STRING(100), allowNull: false, unique: true },
       is_current: { type: DataTypes.BOOLEAN, defaultValue: false },
+      is_deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+    });
+    
+
+    // Tabela de sources (livros)
+    await queryInterface.createTable('sources', {
+      source: { type: DataTypes.STRING(10), primaryKey: true },
+      name: { type: DataTypes.STRING(150), allowNull: false },
+      published: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+      author: { type: DataTypes.STRING(150) },
     });
 
+    // Tabela de raridades
+    await queryInterface.createTable('rarities', {
+      id: { type: DataTypes.STRING, primaryKey: true },
+      name_pt: { type: DataTypes.STRING, allowNull: false },
+    });
+    
     // Tabela de itens base (todos do sistema, ex: 5eTools)
     await queryInterface.createTable('items', {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       name: { type: DataTypes.STRING(100), allowNull: false, unique: true },
-      rarity: { type: DataTypes.STRING(50), allowNull: false },
-      source: { type: DataTypes.STRING(50) },
-      description: { type: DataTypes.STRING(1000) },
+      rarity_id: { type: DataTypes.STRING(20), allowNull: false, defaultValue: 'unknown' },
+      source_id: { type: DataTypes.STRING(10), allowNull: true },
       category: {
         type: DataTypes.ENUM('item', 'upgrade'),
         allowNull: false,
       },
     });
+
+    await queryInterface.addConstraint('items', {
+      fields: ['source_id'],
+      type: 'foreign key',
+      name: 'fk_items_source',
+      references: {
+        table: 'sources',
+        field: 'source',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+    });
+
+    await queryInterface.addConstraint('items', {
+      fields: ['rarity_id'],
+      type: 'foreign key',
+      name: 'fk_items_rarity',
+      references: {
+        table: 'rarities',
+        field: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'RESTRICT',
+    });
+    
 
     // Tabela de itens disponíveis para troca ou compra
     await queryInterface.createTable('available_items', {
@@ -40,6 +80,18 @@ module.exports = {
         references: { model: 'seasons', key: 'id' },
         onDelete: 'CASCADE',
       },
+    });
+
+    await queryInterface.addConstraint('available_items', {
+      fields: ['item_id'],
+      type: 'foreign key',
+      name: 'fk_item',
+      references: {
+        table: 'items',
+        field: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     });
 
     // Tabela de personagens
@@ -129,6 +181,9 @@ module.exports = {
     await queryInterface.dropTable('statuses');
     await queryInterface.dropTable('characters');
     await queryInterface.dropTable('available_items');
+    await queryInterface.removeConstraint('items', 'fk_items_rarity');
+    await queryInterface.removeConstraint('items', 'fk_items_source');
+    await queryInterface.dropTable('sources');
     await queryInterface.dropTable('items');
     await queryInterface.dropTable('seasons');
   },

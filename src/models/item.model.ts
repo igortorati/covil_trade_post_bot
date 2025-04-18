@@ -1,25 +1,38 @@
-import { Column, DataType, Model, Table, HasMany } from 'sequelize-typescript';
-import { AvailableItem } from './availableItem.model';
+import { Column, DataType, Model, Table, HasMany, BelongsTo, ForeignKey } from 'sequelize-typescript';
+import AvailableItem from './availableItem.model';
+import Source from './source.model';
+import Rarity from './rarity.model';
 
 @Table({ tableName: 'items', timestamps: false })
-export class Item extends Model {
-  @Column({ primaryKey: true, autoIncrement: true })
+export default class Item extends Model<Item> {
+  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id!: number;
 
-  @Column({ allowNull: false })
+  @Column({ type: DataType.STRING(100), allowNull: false, unique: true })
   name!: string;
 
-  @Column({ allowNull: false })
-  rarity!: string;
+  @ForeignKey(() => Rarity)
+  @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'unknown' })
+  rarity_id!: string;
 
-  @Column
-  source!: string;
+  @BelongsTo(() => Rarity)
+  rarity?: Rarity;
 
-  @Column(DataType.TEXT)
-  description!: string;
+  @ForeignKey(() => Source)
+  @Column({
+    type: DataType.STRING(10),
+    allowNull: true,
+  })
+  source_id!: string | null;
+  
+  @BelongsTo(() => Source)
+  source?: Source;
 
-  @Column({ allowNull: false })
-  category!: string;
+  @Column({
+    type: DataType.ENUM('item', 'upgrade'),
+    allowNull: false,
+  })
+  category!: 'item' | 'upgrade';
 
   @HasMany(() => AvailableItem)
   availableItems!: AvailableItem[];
