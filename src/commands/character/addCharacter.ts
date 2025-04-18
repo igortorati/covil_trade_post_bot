@@ -15,18 +15,20 @@ export default class AddCharacterCommand implements Command {
       option
         .setName("usuario")
         .setDescription("Usuário do Discord.")
-        .setRequired(true)
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName("nome")
         .setDescription("Nome do personagem.")
-        .setRequired(true)
+        .setRequired(true),
     );
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const user: User = interaction.options.getUser("usuario", true);
     const nome = interaction.options.getString("nome", true);
 
@@ -35,6 +37,9 @@ export default class AddCharacterCommand implements Command {
       name: nome,
     } as Characters);
 
-    await interaction.reply({ content: `Personagem "${nome}" adicionado para o usuário ${user.tag}.`, flags: ["Ephemeral"] });
+    await interaction.reply({
+      content: `Personagem "${nome}" adicionado para o usuário ${user.tag}.`,
+      flags: ["Ephemeral"],
+    });
   }
 }

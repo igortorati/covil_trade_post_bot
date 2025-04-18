@@ -1,6 +1,6 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Model, Table, DataType } from "sequelize-typescript";
 
-@Table({ tableName: 'logs', timestamps: true })
+@Table({ tableName: "logs", timestamps: true })
 export default class Log extends Model {
   @Column(DataType.TEXT)
   request!: string;

@@ -1,7 +1,4 @@
-import {
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-} from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { Command } from "../commands";
 import { RateLimiter } from "discord.js-rate-limiter";
 import Seasons from "../../models/season.model";
@@ -13,23 +10,35 @@ export default class ListSeasonsCommand implements Command {
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const seasons = await Seasons.findAll({
       where: { is_deleted: false },
-      order: [["is_current", "DESC"], ["season", "ASC"]],
+      order: [
+        ["is_current", "DESC"],
+        ["season", "ASC"],
+      ],
     });
 
     if (!seasons.length) {
-      await interaction.reply({ content: "Nenhuma temporada ativa foi encontrada.", flags: ["Ephemeral"] });
+      await interaction.reply({
+        content: "Nenhuma temporada ativa foi encontrada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
-    const seasonsList = seasons.map(t => {
-      const sufix = t.is_current ? " - (**Temporada Atual**)" : "";
-      return `${t.season}${sufix}`;
-    }).join("\n");
+    const seasonsList = seasons
+      .map((t) => {
+        const sufix = t.is_current ? " - (**Temporada Atual**)" : "";
+        return `${t.season}${sufix}`;
+      })
+      .join("\n");
 
-    await interaction.reply({ content: `**Temporadas Ativas:**\n${seasonsList}`, flags: ["Ephemeral"] });
+    await interaction.reply({
+      content: `**Temporadas Ativas:**\n${seasonsList}`,
+      flags: ["Ephemeral"],
+    });
   }
 }
-  

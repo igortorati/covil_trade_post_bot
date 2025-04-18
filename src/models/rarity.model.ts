@@ -1,7 +1,13 @@
-import { Column, Model, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import {
+  Column,
+  Model,
+  Table,
+  DataType,
+  PrimaryKey,
+} from "sequelize-typescript";
 
 @Table({
-  tableName: 'rarities',
+  tableName: "rarities",
   timestamps: false,
 })
 export default class Rarity extends Model {

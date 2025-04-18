@@ -1,6 +1,6 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from "sequelize-typescript";
 
-@Table({ tableName: 'statuses', timestamps: false })
+@Table({ tableName: "statuses", timestamps: false })
 export default class Status extends Model<Status> {
   @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id!: number;

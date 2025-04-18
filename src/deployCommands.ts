@@ -10,12 +10,15 @@ export async function deployCommands() {
   try {
     console.info("Started refreshing application (/) commands.");
 
-    console.info("Commands loaded:", Object.values(commands).length)
+    console.info("Commands loaded:", Object.values(commands).length);
     await rest.put(
-      Routes.applicationGuildCommands(config.discord.clientId, config.discord.guildId),
+      Routes.applicationGuildCommands(
+        config.discord.clientId,
+        config.discord.guildId,
+      ),
       {
         body: commandsData,
-      }
+      },
     );
 
     console.info("Successfully reloaded application (/) commands.");
@@ -25,4 +28,4 @@ export async function deployCommands() {
   }
 }
 
-deployCommands()
+deployCommands();

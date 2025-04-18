@@ -19,26 +19,26 @@ export default class AddSeasonItemCommand implements Command {
         .setName("item")
         .setDescription("Item a ser adicionado.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     )
     .addStringOption((option) =>
       option
         .setName("temporada")
         .setDescription("Temporada para a qual o item será adicionado.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     )
     .addIntegerOption((option) =>
       option
         .setName("quantidade")
         .setDescription("Quantidade disponível do item.")
-        .setRequired(true)
+        .setRequired(true),
     )
     .addNumberOption((option) =>
       option
         .setName("preco")
         .setDescription("Preço do item em PO.")
-        .setRequired(true)
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
@@ -47,18 +47,23 @@ export default class AddSeasonItemCommand implements Command {
         .setRequired(true)
         .addChoices(
           { name: "Sim", value: "sim" },
-          { name: "Não", value: "nao" }
-        )
+          { name: "Não", value: "nao" },
+        ),
     );
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const itemId = interaction.options.getString("item", true);
     const seasonId = interaction.options.getString("temporada", true);
     const quantidade = interaction.options.getInteger("quantidade", true);
     const preco = interaction.options.getNumber("preco", true);
-    const permiteTrocaRaw = interaction.options.getString("permite_troca", true);
+    const permiteTrocaRaw = interaction.options.getString(
+      "permite_troca",
+      true,
+    );
 
     const item = await Items.findByPk(itemId);
     const season = await Seasons.findByPk(seasonId);
@@ -87,28 +92,36 @@ export default class AddSeasonItemCommand implements Command {
     });
   }
 
-  public async autocomplete(interaction: AutocompleteInteraction): Promise<void> {
+  public async autocomplete(
+    interaction: AutocompleteInteraction,
+  ): Promise<void> {
     const focusedOption = interaction.options.getFocused(true);
     const value = focusedOption.value?.toString().trim();
 
     if (focusedOption.name === "item") {
       const items = await Items.findAll({
         where: {
-          name: { [Op.like]: `%${value}%` }
+          name: { [Op.like]: `%${value}%` },
         },
-        limit: 25
+        limit: 25,
       });
-      const choices = items.map((item) => ({ name: item.name, value: item.id.toString() }));
+      const choices = items.map((item) => ({
+        name: item.name,
+        value: item.id.toString(),
+      }));
       await interaction.respond(choices);
     } else if (focusedOption.name === "temporada") {
       const seasons = await Seasons.findAll({
         where: {
           is_deleted: false,
-          season: { [Op.like]: `%${value}%` }
+          season: { [Op.like]: `%${value}%` },
         },
-        limit: 25
+        limit: 25,
       });
-      const choices = seasons.map((season) => ({ name: season.season, value: season.id.toString() }));
+      const choices = seasons.map((season) => ({
+        name: season.season,
+        value: season.id.toString(),
+      }));
       await interaction.respond(choices);
     }
   }

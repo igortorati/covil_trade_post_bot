@@ -10,20 +10,29 @@ import Items from "../../models/item.model";
 import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
 
-export default class ListPurchasableItemsOnCurrentSeasonCommand implements Command {
+export default class ListPurchasableItemsOnCurrentSeasonCommand
+  implements Command
+{
   public data = new SlashCommandBuilder()
     .setName("listar-itens-compraveis")
-    .setDescription("Lista os itens disponíveis para compra na temporada atual.");
+    .setDescription(
+      "Lista os itens disponíveis para compra na temporada atual.",
+    );
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const currentSeason = await Seasons.findOne({
       where: { is_deleted: false, is_current: true },
     });
 
     if (!currentSeason) {
-      await interaction.reply({ content: "Nenhuma temporada ativa foi encontrada.", flags: ["Ephemeral"] });
+      await interaction.reply({
+        content: "Nenhuma temporada ativa foi encontrada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
@@ -36,12 +45,17 @@ export default class ListPurchasableItemsOnCurrentSeasonCommand implements Comma
     });
 
     if (items.length === 0) {
-      await interaction.reply({ content: "Não há itens disponíveis para compra nesta temporada.", flags: ["Ephemeral"] });
+      await interaction.reply({
+        content: "Não há itens disponíveis para compra nesta temporada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
     const embed = new EmbedBuilder()
-      .setTitle(`🛒 Itens disponíveis para **compra** – Temporada: ${currentSeason.season}`)
+      .setTitle(
+        `🛒 Itens disponíveis para **compra** – Temporada: ${currentSeason.season}`,
+      )
       .setColor("Green");
 
     for (const available of items) {
@@ -54,7 +68,7 @@ export default class ListPurchasableItemsOnCurrentSeasonCommand implements Comma
           `**💰 Preço:** ${available.price} PO`,
           `**📦 Quantidade disponível:** ${available.quantity}`,
           `**🔁 Permite troca:** ${available.can_trade ? "Sim" : "Não"}`,
-          `\u200B`
+          `\u200B`,
         ].join("\n"),
         inline: false,
       });

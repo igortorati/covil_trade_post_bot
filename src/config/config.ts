@@ -9,9 +9,12 @@ const envSchema = z.object({
   DISCORD_GUILD_ID: z.string().min(1, "DISCORD_GUILD_ID é obrigatório"),
 
   DB_HOST: z.string().min(1, "DB_HOST é obrigatório"),
-  DB_PORT: z.string().transform(Number).refine((port: number) => !isNaN(port), {
-    message: "DB_PORT deve ser um número válido"
-  }),
+  DB_PORT: z
+    .string()
+    .transform(Number)
+    .refine((port: number) => !isNaN(port), {
+      message: "DB_PORT deve ser um número válido",
+    }),
   DB_USERNAME: z.string(),
   DB_PASSWORD: z.string(),
   DB_DATABASE: z.string(),
@@ -20,7 +23,10 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error("❌ Erro ao validar variáveis de ambiente:", parsed.error.format());
+  console.error(
+    "❌ Erro ao validar variáveis de ambiente:",
+    parsed.error.format(),
+  );
   process.exit(1);
 }
 

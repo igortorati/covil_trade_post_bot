@@ -1,7 +1,7 @@
-import { Column, DataType, Model, Table, HasMany } from 'sequelize-typescript';
-import AvailableItem from './availableItem.model';
+import { Column, DataType, Model, Table, HasMany } from "sequelize-typescript";
+import AvailableItem from "./availableItem.model";
 
-@Table({ tableName: 'seasons', timestamps: false })
+@Table({ tableName: "seasons", timestamps: false })
 export default class Season extends Model<Season> {
   @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id!: number;

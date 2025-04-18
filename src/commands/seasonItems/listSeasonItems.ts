@@ -21,17 +21,24 @@ export default class ListSeasonItemsCommand implements Command {
         .setName("temporada")
         .setDescription("Temporada para listar os itens.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     );
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const seasonId = interaction.options.getString("temporada", true);
 
-    const season = await Seasons.findOne({ where: { id: seasonId, is_deleted: false } });
+    const season = await Seasons.findOne({
+      where: { id: seasonId, is_deleted: false },
+    });
     if (!season) {
-      await interaction.reply({ content: "Temporada não encontrada.", flags: ["Ephemeral"] });
+      await interaction.reply({
+        content: "Temporada não encontrada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
@@ -42,7 +49,10 @@ export default class ListSeasonItemsCommand implements Command {
     });
 
     if (availableItems.length === 0) {
-      await interaction.reply({ content: "Nenhum item disponível para esta temporada.", flags: ["Ephemeral"] });
+      await interaction.reply({
+        content: "Nenhum item disponível para esta temporada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
@@ -60,7 +70,7 @@ export default class ListSeasonItemsCommand implements Command {
           `**💰 Preço:** ${ai.price} PO`,
           `**📦 Quantidade disponível:** ${ai.quantity}`,
           `**🔁 Permite troca:** ${ai.can_trade ? "Sim" : "Não"}`,
-          `\u200B` // espaço visual entre blocos
+          `\u200B`, // espaço visual entre blocos
         ].join("\n"),
         inline: false,
       });
@@ -69,21 +79,23 @@ export default class ListSeasonItemsCommand implements Command {
     await interaction.reply({ embeds: [embed], flags: ["Ephemeral"] });
   }
 
-  public async autocomplete(interaction: AutocompleteInteraction): Promise<void> {
+  public async autocomplete(
+    interaction: AutocompleteInteraction,
+  ): Promise<void> {
     const focusedOption = interaction.options.getFocused(true);
     const value = focusedOption.value?.toString().trim();
 
     const seasons = await Seasons.findAll({
       where: {
         is_deleted: false,
-        season: { [Op.like]: `%${value}%` }
+        season: { [Op.like]: `%${value}%` },
       },
-      limit: 25
+      limit: 25,
     });
 
     const choices = seasons.map((season) => ({
       name: season.season,
-      value: season.id.toString()
+      value: season.id.toString(),
     }));
 
     await interaction.respond(choices);

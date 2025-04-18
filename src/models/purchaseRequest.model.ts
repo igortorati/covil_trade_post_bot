@@ -1,9 +1,16 @@
-import { Column, Model, Table, ForeignKey, BelongsTo, DataType } from 'sequelize-typescript';
-import Character from './character.model';
-import Item from './item.model';
-import Status from './status.model';
+import {
+  Column,
+  Model,
+  Table,
+  ForeignKey,
+  BelongsTo,
+  DataType,
+} from "sequelize-typescript";
+import Character from "./character.model";
+import Item from "./item.model";
+import Status from "./status.model";
 
-@Table({ tableName: 'purchase_requests' })
+@Table({ tableName: "purchase_requests" })
 export default class PurchaseRequest extends Model<PurchaseRequest> {
   @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id!: number;

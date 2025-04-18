@@ -5,9 +5,9 @@ import {
   PrimaryKey,
   DataType,
   Default,
-} from 'sequelize-typescript';
-  
-@Table({ tableName: 'sources', timestamps: false })
+} from "sequelize-typescript";
+
+@Table({ tableName: "sources", timestamps: false })
 export default class Source extends Model {
   @PrimaryKey
   @Column({
@@ -34,4 +34,3 @@ export default class Source extends Model {
   })
   author?: string;
 }
-  

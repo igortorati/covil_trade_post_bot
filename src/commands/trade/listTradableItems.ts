@@ -10,20 +10,29 @@ import Items from "../../models/item.model";
 import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
 
-export default class ListTradableItemsOnCurrentSeasonCommand implements Command {
+export default class ListTradableItemsOnCurrentSeasonCommand
+  implements Command
+{
   public data = new SlashCommandBuilder()
     .setName("listar-itens-trocaveis")
-    .setDescription("Lista os itens disponíveis para troca na temporada atual.");
+    .setDescription(
+      "Lista os itens disponíveis para troca na temporada atual.",
+    );
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const currentSeason = await Seasons.findOne({
       where: { is_deleted: false, is_current: true },
     });
 
     if (!currentSeason) {
-      await interaction.reply({ content: "Nenhuma temporada ativa foi encontrada.", flags: ["Ephemeral"] });
+      await interaction.reply({
+        content: "Nenhuma temporada ativa foi encontrada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
@@ -37,12 +46,17 @@ export default class ListTradableItemsOnCurrentSeasonCommand implements Command 
     });
 
     if (items.length === 0) {
-      await interaction.reply({ content: "Não há itens disponíveis para troca nesta temporada.", flags: ["Ephemeral"] });
+      await interaction.reply({
+        content: "Não há itens disponíveis para troca nesta temporada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
     const embed = new EmbedBuilder()
-      .setTitle(`📦 Itens disponíveis para **troca** – Temporada: ${currentSeason.season}`)
+      .setTitle(
+        `📦 Itens disponíveis para **troca** – Temporada: ${currentSeason.season}`,
+      )
       .setColor("Gold");
 
     for (const available of items) {
@@ -54,7 +68,7 @@ export default class ListTradableItemsOnCurrentSeasonCommand implements Command 
         value: [
           `**💰 Preço:** ${available.price} PO`,
           `**📦 Quantidade disponível:** ${available.quantity}`,
-          `\u200B` // caractere invisível para espaçar visualmente
+          `\u200B`, // caractere invisível para espaçar visualmente
         ].join("\n"),
         inline: false,
       });

@@ -1,8 +1,4 @@
-
-import {
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-} from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { Command } from "../commands";
 import { RateLimiter } from "discord.js-rate-limiter";
 
@@ -13,7 +9,9 @@ export default class PingCommand implements Command {
 
   public cooldown = new RateLimiter(1, 5000); // opcional, exemplo: 1 uso a cada 5s
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     await interaction.reply("Pong!!!");
   }
 }
