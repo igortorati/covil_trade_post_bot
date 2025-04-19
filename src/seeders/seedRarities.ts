@@ -1,7 +1,7 @@
 import Rarity from "../models/rarity.model";
 import sequelize from "../config/database";
 
-const rarities = [
+export const rarities = [
   { id: "none", namePt: "nenhuma", priority: 0 },
   { id: "common", namePt: "comum", priority: 1 },
   { id: "uncommon", namePt: "incomum", priority: 2 },

@@ -24,14 +24,22 @@ export default class TradeRequest extends Model<TradeRequest> {
   character?: Character;
 
   @ForeignKey(() => AvailableItem)
-  @Column({ type: DataType.INTEGER, allowNull: false, field: "available_item_desired_id" })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: "available_item_desired_id",
+  })
   availableItemDesiredId!: number;
 
   @BelongsTo(() => AvailableItem)
   availableItemDesired?: AvailableItem;
 
   @ForeignKey(() => Item)
-  @Column({ type: DataType.INTEGER, allowNull: false, field: "item_offered_id" })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: "item_offered_id",
+  })
   itemOfferedId!: number;
 
   @BelongsTo(() => Item)
@@ -48,7 +56,7 @@ export default class TradeRequest extends Model<TradeRequest> {
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
-    field: "created_at"
+    field: "created_at",
   })
   createdAt!: Date;
 
@@ -56,7 +64,10 @@ export default class TradeRequest extends Model<TradeRequest> {
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
-    field: "updated_at"
+    field: "updated_at",
   })
   updatedAt!: Date;
+
+  @Column({ type: DataType.STRING(100), allowNull: false, field: "updated_by" })
+  updatedBy!: string;
 }

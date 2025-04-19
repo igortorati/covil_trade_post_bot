@@ -7,7 +7,7 @@ export default class PingCommand implements Command {
     .setName("ping")
     .setDescription("Replies with Pong!");
 
-  public cooldown = new RateLimiter(1, 5000); // opcional, exemplo: 1 uso a cada 5s
+  public cooldown = new RateLimiter(1, 5000);
 
   public async execute(
     interaction: ChatInputCommandInteraction,

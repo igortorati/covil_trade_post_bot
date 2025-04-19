@@ -24,19 +24,21 @@ export default class PurchaseRequestCommand implements Command {
         .setName("personagem")
         .setDescription("Selecione o personagem.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     )
     .addStringOption((option) =>
       option
         .setName("item_desejado")
         .setDescription("Selecione o item desejado para compra.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     );
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const userId = interaction.user.id;
     const characterId = interaction.options.getString("personagem", true);
     const desiredItemId = interaction.options.getString("item_desejado", true);
@@ -49,7 +51,7 @@ export default class PurchaseRequestCommand implements Command {
     if (!character) {
       await interaction.reply({
         content: "Personagem não encontrado ou não pertence a você.",
-        ephemeral: true,
+        flags: ["Ephemeral"],
       });
       return;
     }
@@ -61,7 +63,7 @@ export default class PurchaseRequestCommand implements Command {
     if (!currentSeason) {
       await interaction.reply({
         content: "Nenhuma temporada ativa foi encontrada.",
-        ephemeral: true,
+        flags: ["Ephemeral"],
       });
       return;
     }
@@ -77,7 +79,7 @@ export default class PurchaseRequestCommand implements Command {
     if (!availableItem || !availableItem.item) {
       await interaction.reply({
         content: "Item não está disponível para compra nesta temporada.",
-        ephemeral: true,
+        flags: ["Ephemeral"],
       });
       return;
     }
@@ -105,11 +107,13 @@ export default class PurchaseRequestCommand implements Command {
 
     await interaction.reply({
       embeds: [embed],
-      ephemeral: true,
+      flags: ["Ephemeral"],
     });
   }
 
-  public async autocomplete(interaction: AutocompleteInteraction): Promise<void> {
+  public async autocomplete(
+    interaction: AutocompleteInteraction,
+  ): Promise<void> {
     const focusedOption = interaction.options.getFocused(true);
     const userId = interaction.user.id;
     const value = focusedOption.value.toString();

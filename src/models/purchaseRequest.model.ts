@@ -19,14 +19,18 @@ export default class PurchaseRequest extends Model<PurchaseRequest> {
   @ForeignKey(() => Character)
   @Column({ type: DataType.INTEGER, allowNull: false, field: "character_id" })
   characterId!: number;
-  
+
   @BelongsTo(() => Character)
   character?: Character;
 
   @ForeignKey(() => AvailableItem)
-  @Column({ type: DataType.INTEGER, allowNull: false, field: "available_item_id" })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: "available_item_id",
+  })
   availableItemId!: number;
-  
+
   @BelongsTo(() => AvailableItem)
   availableItem?: AvailableItem;
 
@@ -41,7 +45,7 @@ export default class PurchaseRequest extends Model<PurchaseRequest> {
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
-    field: "created_at"
+    field: "created_at",
   })
   createdAt!: Date;
 
@@ -49,7 +53,10 @@ export default class PurchaseRequest extends Model<PurchaseRequest> {
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
-    field: "updated_at"
+    field: "updated_at",
   })
   updatedAt!: Date;
+
+  @Column({ type: DataType.STRING(100), allowNull: false, field: "updated_by" })
+  updatedBy!: string;
 }

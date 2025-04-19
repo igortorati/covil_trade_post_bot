@@ -28,10 +28,17 @@ export default class ListTradeRequestsCommand implements Command {
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const season = await Seasons.findOne({ where: { isDeleted: false, isCurrent: true } });
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
+    const season = await Seasons.findOne({
+      where: { isDeleted: false, isCurrent: true },
+    });
     if (!season) {
-      await interaction.reply({ content: "Nenhuma temporada ativa encontrada.", ephemeral: true });
+      await interaction.reply({
+        content: "Nenhuma temporada ativa encontrada.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
@@ -51,45 +58,62 @@ export default class ListTradeRequestsCommand implements Command {
           model: Characters,
         },
       ],
+      limit: 5
     });
 
     if (requests.length === 0) {
-      await interaction.reply({ content: "Nenhuma requisição de troca pendente.", ephemeral: true });
+      await interaction.reply({
+        content: "Nenhuma requisição de troca pendente.",
+        flags: ["Ephemeral"],
+      });
       return;
     }
 
-    await interaction.reply({ content: `🔁 Requisições de troca pendentes para a temporada **${season.season}**:`, ephemeral: true });
+    await interaction.reply({
+      content: `🔁 Requisições de troca pendentes para a temporada **${season.season}**:`,
+      flags: ["Ephemeral"],
+    });
 
     for (const req of requests) {
       const desiredItem = req.availableItemDesired?.item;
       const offeredItem = req.itemOffered;
       const character = req.character;
 
+      const fields = [
+        {
+          name: `🎯 Item Desejado`,
+          value: `**${desiredItem?.name}** — *${desiredItem?.rarity?.namePt || desiredItem?.rarityId}*\nDisponíveis: ${req.availableItemDesired?.quantity}`,
+          inline: false,
+        },
+        {
+          name: `🎁 Item Oferecido`,
+          value: `**${offeredItem?.name}** — *${offeredItem?.rarity?.namePt || offeredItem?.rarityId}*`,
+          inline: false,
+        },
+        {
+          name: `👤 Personagem`,
+          value: `${character?.name}`,
+          inline: true,
+        },
+        {
+          name: `📅 Temporada`,
+          value: season.season,
+          inline: true,
+        },
+      ]
+      
+      if (desiredItem?.category === "upgrade") {
+        fields.push({
+          name: "⚠️ Atenção",
+          value: "**```🔴 Verifique se o jogador possui o item necessário ou ouro para comprá-lo.```**",
+          inline: false,
+        });
+      }
+
       const embed = new EmbedBuilder()
         .setColor("#f39c12")
         .setTitle(`🔁 Requisição #${req.id}`)
-        .addFields(
-          {
-            name: `🎯 Item Desejado`,
-            value: `**${desiredItem?.name}** — *${desiredItem?.rarity?.namePt || desiredItem?.rarityId}*\nDisponíveis: ${req.availableItemDesired?.quantity}`,
-            inline: false,
-          },
-          {
-            name: `🎁 Item Oferecido`,
-            value: `**${offeredItem?.name}** — *${offeredItem?.rarity?.namePt || offeredItem?.rarityId}*`,
-            inline: false,
-          },
-          {
-            name: `👤 Personagem`,
-            value: `${character?.name}`,
-            inline: true,
-          },
-          {
-            name: `📅 Temporada`,
-            value: season.season,
-            inline: true,
-          }
-        );
+        .addFields(...fields);
 
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
@@ -99,10 +123,14 @@ export default class ListTradeRequestsCommand implements Command {
         new ButtonBuilder()
           .setCustomId(`reject_trade_${req.id}`)
           .setLabel("❌ Rejeitar")
-          .setStyle(ButtonStyle.Danger)
+          .setStyle(ButtonStyle.Danger),
       );
 
-      await interaction.followUp({ embeds: [embed], components: [row], ephemeral: true });
+      await interaction.followUp({
+        embeds: [embed],
+        components: [row],
+        flags: ["Ephemeral"],
+      });
     }
   }
 }

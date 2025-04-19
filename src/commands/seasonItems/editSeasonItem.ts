@@ -79,11 +79,6 @@ export default class EditSeasonItemCommand implements Command {
     const newQuantidade = interaction.options.getInteger("quantidade");
     const newPreco = interaction.options.getNumber("preco");
     const trocaStr = interaction.options.getString("permite_troca");
-    console.log("!!trocaStr", !!trocaStr);
-    console.log(
-      '!!trocaStr ? trocaStr === "sim" : availableItem.can_trade',
-      !!trocaStr ? trocaStr === "sim" : availableItem.canTrade,
-    );
 
     const item = newItemId
       ? await Items.findByPk(newItemId)

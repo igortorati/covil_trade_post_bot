@@ -10,6 +10,7 @@ import Items from "../../models/item.model";
 import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
 import { STRING_COMMANDS } from "..";
+import { Op } from "sequelize";
 
 export default class ListTradableItemsOnCurrentSeasonCommand
   implements Command
@@ -41,6 +42,7 @@ export default class ListTradableItemsOnCurrentSeasonCommand
       where: {
         seasonId: currentSeason.id,
         canTrade: true,
+        quantity: { [Op.gt]: 0 }
       },
       include: [{ model: Items, include: [Rarities] }],
       order: [["price", "ASC"]],
@@ -75,6 +77,6 @@ export default class ListTradableItemsOnCurrentSeasonCommand
       });
     }
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: ["Ephemeral"] });
   }
 }

@@ -12,11 +12,13 @@ function isCacheExpired(): boolean {
 
 async function fetchRarities(): Promise<void> {
   const rarities = await Rarity.findAll({ order: [["priority", "ASC"]] });
-  cachedRarityList = rarities.map(r => r.id.toLowerCase());
+  cachedRarityList = rarities.map((r) => r.id.toLowerCase());
   lastUpdated = Date.now();
 }
 
-export async function getAllowedRaritiesFrom(rarityId: string): Promise<string[]> {
+export async function getAllowedRaritiesFrom(
+  rarityId: string,
+): Promise<string[]> {
   if (isCacheExpired() || cachedRarityList.length === 0) {
     await fetchRarities();
   }

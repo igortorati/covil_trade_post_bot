@@ -10,6 +10,7 @@ import Items from "../../models/item.model";
 import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
 import { STRING_COMMANDS } from "..";
+import { Op } from "sequelize";
 
 export default class ListPurchasableItemsOnCurrentSeasonCommand
   implements Command
@@ -40,6 +41,7 @@ export default class ListPurchasableItemsOnCurrentSeasonCommand
     const items = await AvailableItems.findAll({
       where: {
         seasonId: currentSeason.id,
+        quantity: { [Op.gt]: 0 }
       },
       include: [{ model: Items, include: [Rarities] }],
       order: [["price", "ASC"]],

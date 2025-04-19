@@ -12,7 +12,12 @@ export default class Season extends Model<Season> {
   @Column({ type: DataType.BOOLEAN, defaultValue: false, field: "is_current" })
   isCurrent!: boolean;
 
-  @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false, field: "is_deleted" })
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    field: "is_deleted",
+  })
   isDeleted!: boolean;
 
   @HasMany(() => AvailableItem)

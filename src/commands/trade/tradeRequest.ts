@@ -27,26 +27,28 @@ export default class TradeRequestCommand implements Command {
         .setName("personagem")
         .setDescription("Selecione o personagem.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     )
     .addStringOption((option) =>
       option
         .setName("item_desejado")
         .setDescription("Selecione o item desejado.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     )
     .addStringOption((option) =>
       option
         .setName("item_oferecido")
         .setDescription("Selecione o item que deseja oferecer.")
         .setRequired(true)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     );
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const userId = interaction.user.id;
     const characterId = interaction.options.getString("personagem", true);
     const desiredItemId = interaction.options.getString("item_desejado", true);
@@ -90,7 +92,8 @@ export default class TradeRequestCommand implements Command {
 
     if (!availableItem || !availableItem.item) {
       await interaction.reply({
-        content: "Item desejado não está disponível para troca nesta temporada.",
+        content:
+          "Item desejado não está disponível para troca nesta temporada.",
         flags: ["Ephemeral"],
       });
       return;
@@ -132,18 +135,20 @@ export default class TradeRequestCommand implements Command {
           name: `🎁 Item Oferecido: 🧪 ${offeredItem.name} — *${offeredItem.rarity?.namePt || offeredItem.rarityId}*`,
           value: `Este item será avaliado pelos administradores para validar a troca.`,
           inline: false,
-        }
+        },
       )
       .setFooter({ text: `Personagem: ${character.name}` })
       .setTimestamp();
 
     await interaction.reply({
       embeds: [embed],
-      ephemeral: true,
+      flags: ["Ephemeral"],
     });
   }
 
-  public async autocomplete(interaction: AutocompleteInteraction): Promise<void> {
+  public async autocomplete(
+    interaction: AutocompleteInteraction,
+  ): Promise<void> {
     const focusedOption = interaction.options.getFocused(true);
     const userId = interaction.user.id;
     const value = focusedOption.value.toString();
@@ -197,7 +202,8 @@ export default class TradeRequestCommand implements Command {
 
       await interaction.respond(choices);
     } else if (focusedOption.name === "item_oferecido") {
-      const desiredAvailableItemId = interaction.options.getString("item_desejado");
+      const desiredAvailableItemId =
+        interaction.options.getString("item_desejado");
       let items = [];
 
       if (desiredAvailableItemId) {
@@ -205,13 +211,13 @@ export default class TradeRequestCommand implements Command {
           where: {
             id: desiredAvailableItemId,
           },
-          include: [{ model: Items, include: ['rarity'] }],
+          include: [{ model: Items, include: ["rarity"] }],
         });
 
         const desiredItem = desiredAvailableItem?.item;
-      
+
         let rarityFilter: string[] = [];
-        
+
         if (desiredItem?.rarityId) {
           rarityFilter = await getAllowedRaritiesFrom(desiredItem.rarityId);
         }
@@ -226,7 +232,7 @@ export default class TradeRequestCommand implements Command {
             }),
           },
           limit: 25,
-        }); 
+        });
       } else {
         items = await Items.findAll();
       }

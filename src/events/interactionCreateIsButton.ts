@@ -1,53 +1,18 @@
-import { Client, Events } from "discord.js";
-import { deployCommands } from "./deployCommands";
-import { commands } from "./commands";
-import { TradeRequestStatus } from "./utils/requestStatus";
-import TradeRequest from "./models/tradeRequest.model";
-import AvailableItem from "./models/availableItem.model";
-import Item from "./models/item.model";
-import Character from "./models/character.model";
-import PurchaseRequest from "./models/purchaseRequest.model";
-
-export const client = new Client({
-  intents: ["Guilds", "GuildMessages", "DirectMessages", "MessageContent"],
-});
-
-client.once(Events.ClientReady, () => {
-  console.log("Discord bot is ready! 🤖");
-});
-
-client.on(Events.GuildCreate, async (guild) => {
-  await deployCommands();
-});
+import { Events } from "discord.js";
+import { client } from "../config/client";
+import { TradeRequestStatus } from "../utils/requestStatus";
+import TradeRequest from "../models/tradeRequest.model";
+import AvailableItem from "../models/availableItem.model";
+import Item from "../models/item.model";
+import Character from "../models/character.model";
+import PurchaseRequest from "../models/purchaseRequest.model";
 
 client.on(Events.InteractionCreate, async (interaction) => {
-  if (interaction.isChatInputCommand()) {
-    const command = commands[interaction.commandName];
-    if (command) {
-      await command.execute(interaction);
-    }
-  }
-
-  if (interaction.isAutocomplete()) {
-    const command = commands[interaction.commandName];
-    if (command?.autocomplete) {
-      const focused = interaction.options.getFocused(true);
-      await command.autocomplete(interaction);
-    }
-  }
-
-  if (interaction.isModalSubmit()) {
-    const [commandName] = interaction.customId.split(":");
-    const command = commands[commandName];
-    if (command?.modalSubmit) {
-      await command.modalSubmit(interaction);
-    }
-  }
-
   if (interaction.isButton()) {
     const [action, type, requestIdStr] = interaction.customId.split("_");
     const requestId = parseInt(requestIdStr, 10);
-  
+    const userId = interaction.user.id;
+
     if (type === "trade") {
       const request = await TradeRequest.findByPk(requestId, {
         include: [
@@ -56,13 +21,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
           { model: Character },
         ],
       });
-      console.log("request", request)
-  
+
       if (!request) {
-        await interaction.reply({ content: "🔁 Requisição de troca não encontrada.", ephemeral: true });
+        await interaction.reply({
+          content: "🔁 Requisição de troca não encontrada.",
+          ephemeral: true,
+        });
         return;
       }
-  
+
       if (request.statusId !== TradeRequestStatus.PENDING) {
         await interaction.reply({
           content: "⚠️ Esta troca já foi processada anteriormente.",
@@ -70,12 +37,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
         });
         return;
       }
-  
+
       if (action === "approve") {
         const available = request.availableItemDesired;
-  
         if (!available || available.quantity < 1) {
           request.statusId = TradeRequestStatus.OUT_OF_STOCK;
+          request.updatedBy = userId;
           await request.save();
           await interaction.reply({
             content: "❌ Não foi possível aprovar a troca: item desejado esgotado.",
@@ -83,39 +50,43 @@ client.on(Events.InteractionCreate, async (interaction) => {
           });
           return;
         }
-  
+
         request.statusId = TradeRequestStatus.APPROVED;
+        request.updatedBy = userId;
         await request.save();
-  
         available.quantity -= 1;
         await available.save();
-  
+
         await interaction.reply({
           content: `✅ Troca aprovada com sucesso para **${request.character?.name}**!`,
           ephemeral: true,
         });
       }
-  
+
       if (action === "reject") {
         request.statusId = TradeRequestStatus.REJECTED;
+        request.updatedBy = userId;
         await request.save();
-        await interaction.reply({ content: "❌ Troca rejeitada.", ephemeral: true });
+        await interaction.reply({
+          content: "❌ Troca rejeitada.",
+          ephemeral: true,
+        });
       }
     }
-  
+
     if (type === "purchase") {
       const request = await PurchaseRequest.findByPk(requestId, {
-        include: [
-          { model: AvailableItem, include: [Item] },
-          { model: Character },
-        ],
+        include: [{ model: AvailableItem, include: [Item] }, { model: Character }],
       });
-  
+
       if (!request) {
-        await interaction.reply({ content: "🛒 Requisição de compra não encontrada.", ephemeral: true });
+        await interaction.reply({
+          content: "🛒 Requisição de compra não encontrada.",
+          ephemeral: true,
+        });
         return;
       }
-  
+
       if (request.statusId !== TradeRequestStatus.PENDING) {
         await interaction.reply({
           content: "⚠️ Esta compra já foi processada anteriormente.",
@@ -123,12 +94,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
         });
         return;
       }
-  
+
       if (action === "approve") {
         const available = request.availableItem;
-  
         if (!available || available.quantity < 1) {
           request.statusId = TradeRequestStatus.OUT_OF_STOCK;
+          request.updatedBy = userId;
           await request.save();
           await interaction.reply({
             content: "❌ Não foi possível aprovar a compra: item esgotado.",
@@ -136,24 +107,28 @@ client.on(Events.InteractionCreate, async (interaction) => {
           });
           return;
         }
-  
+
         request.statusId = TradeRequestStatus.APPROVED;
+        request.updatedBy = userId;
         await request.save();
-  
         available.quantity -= 1;
         await available.save();
-  
+
         await interaction.reply({
           content: `✅ Compra aprovada com sucesso para **${request.character?.name}**!`,
           ephemeral: true,
         });
       }
-  
+
       if (action === "reject") {
         request.statusId = TradeRequestStatus.REJECTED;
+        request.updatedBy = userId;
         await request.save();
-        await interaction.reply({ content: "❌ Compra rejeitada.", ephemeral: true });
+        await interaction.reply({
+          content: "❌ Compra rejeitada.",
+          ephemeral: true,
+        });
       }
     }
-  }  
+  }
 });
