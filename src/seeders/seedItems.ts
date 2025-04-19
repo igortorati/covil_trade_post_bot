@@ -34,10 +34,10 @@ export async function seedItems() {
 
     return {
       name: item.name,
-      source_id: source,
-      rarity_id: rarity,
+      sourceId: source,
+      rarityId: rarity,
       description: item.description || null,
-      category: "item" as const,
+      category: "item",
     };
   });
 

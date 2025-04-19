@@ -11,10 +11,11 @@ import Items from "../../models/item.model";
 import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
 import { Op } from "sequelize";
+import { STRING_COMMANDS } from "..";
 
 export default class ListSeasonItemsCommand implements Command {
   public data = new SlashCommandBuilder()
-    .setName("listar-itens-temporada")
+    .setName(STRING_COMMANDS.LIST_SEASON_ITEMS)
     .setDescription("Lista os itens disponíveis para uma temporada.")
     .addStringOption((option) =>
       option
@@ -32,7 +33,7 @@ export default class ListSeasonItemsCommand implements Command {
     const seasonId = interaction.options.getString("temporada", true);
 
     const season = await Seasons.findOne({
-      where: { id: seasonId, is_deleted: false },
+      where: { id: seasonId, isDeleted: false },
     });
     if (!season) {
       await interaction.reply({
@@ -43,7 +44,7 @@ export default class ListSeasonItemsCommand implements Command {
     }
 
     const availableItems = await AvailableItems.findAll({
-      where: { season_id: seasonId },
+      where: { seasonId: seasonId },
       include: [{ model: Items, include: [Rarities] }],
       order: [[{ model: Items, as: "item" }, "name", "ASC"]],
     });
@@ -65,11 +66,11 @@ export default class ListSeasonItemsCommand implements Command {
       const rarity = item.rarity!;
 
       embed.addFields({
-        name: `🧪 ${item.name} — *${rarity.name_pt}*`,
+        name: `🧪 ${item.name} — *${rarity.namePt}*`,
         value: [
           `**💰 Preço:** ${ai.price} PO`,
           `**📦 Quantidade disponível:** ${ai.quantity}`,
-          `**🔁 Permite troca:** ${ai.can_trade ? "Sim" : "Não"}`,
+          `**🔁 Permite troca:** ${ai.canTrade ? "Sim" : "Não"}`,
           `\u200B`, // espaço visual entre blocos
         ].join("\n"),
         inline: false,
@@ -87,7 +88,7 @@ export default class ListSeasonItemsCommand implements Command {
 
     const seasons = await Seasons.findAll({
       where: {
-        is_deleted: false,
+        isDeleted: false,
         season: { [Op.like]: `%${value}%` },
       },
       limit: 25,

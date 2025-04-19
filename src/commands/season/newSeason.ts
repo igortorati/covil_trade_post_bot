@@ -2,10 +2,11 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { Command } from "../commands";
 import { RateLimiter } from "discord.js-rate-limiter";
 import Seasons from "../../models/season.model";
+import { STRING_COMMANDS } from "..";
 
 export default class NewSeasonCommand implements Command {
   public data = new SlashCommandBuilder()
-    .setName("nova-temporada")
+    .setName(STRING_COMMANDS.CREATE_SEASON)
     .setDescription("Cria uma nova temporada na tabela seasons.")
     .addStringOption((option) =>
       option
@@ -22,10 +23,22 @@ export default class NewSeasonCommand implements Command {
   ): Promise<void> {
     const season = interaction.options.getString("temporada", true);
 
+    const existing = await Seasons.findOne({
+      where: { season },
+    });
+
+    if (existing) {
+      await interaction.reply({
+        content: `🚫 Já existe uma temporada com o nome **${season}**.`,
+        flags: ["Ephemeral"],
+      });
+      return;
+    }
+
     await Seasons.create({
       season,
-      is_current: false,
-      is_deleted: false,
+      isCurrent: false,
+      isDeleted: false,
     } as Seasons);
 
     await interaction.reply({

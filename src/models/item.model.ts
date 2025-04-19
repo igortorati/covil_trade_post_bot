@@ -20,8 +20,8 @@ export default class Item extends Model<Item> {
   name!: string;
 
   @ForeignKey(() => Rarity)
-  @Column({ type: DataType.STRING, allowNull: false, defaultValue: "unknown" })
-  rarity_id!: string;
+  @Column({ type: DataType.STRING, allowNull: false, defaultValue: "unknown", field: "rarity_id" })
+  rarityId!: string;
 
   @BelongsTo(() => Rarity)
   rarity?: Rarity;
@@ -30,8 +30,9 @@ export default class Item extends Model<Item> {
   @Column({
     type: DataType.STRING(10),
     allowNull: true,
+    field: "source_id"
   })
-  source_id!: string | null;
+  sourceId!: string | null;
 
   @BelongsTo(() => Source)
   source?: Source;

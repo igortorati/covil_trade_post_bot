@@ -2,10 +2,11 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { Command } from "../commands";
 import { RateLimiter } from "discord.js-rate-limiter";
 import AvailableItems from "../../models/availableItem.model";
+import { STRING_COMMANDS } from "..";
 
 export default class RemoveSeasonItemCommand implements Command {
   public data = new SlashCommandBuilder()
-    .setName("remover-item")
+    .setName(STRING_COMMANDS.REMOVE_ITEM_FROM_SEASON)
     .setDescription("Remove um item disponível.")
     .addIntegerOption((option) =>
       option

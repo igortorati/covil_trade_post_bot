@@ -28,8 +28,9 @@ module.exports = {
 
     // Tabela de raridades
     await queryInterface.createTable("rarities", {
-      id: { type: DataTypes.STRING, primaryKey: true },
-      name_pt: { type: DataTypes.STRING, allowNull: false },
+      id: { type: DataTypes.STRING(20), primaryKey: true },
+      name_pt: { type: DataTypes.STRING(20), allowNull: false },
+      priority: { type: DataTypes.INTEGER, allowNull: false, unique: true },
     });
 
     // Tabela de itens base (todos do sistema, ex: 5eTools)
@@ -126,10 +127,10 @@ module.exports = {
         references: { model: "characters", key: "id" },
         onDelete: "CASCADE",
       },
-      item_desired_id: {
+      available_item_desired_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: { model: "items", key: "id" },
+        references: { model: "available_items", key: "id" },
       },
       item_offered_id: {
         type: DataTypes.INTEGER,
@@ -146,6 +147,11 @@ module.exports = {
         allowNull: false,
         defaultValue: DataTypes.NOW,
       },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
     });
 
     // Tabela de requisições de compra
@@ -157,10 +163,10 @@ module.exports = {
         references: { model: "characters", key: "id" },
         onDelete: "CASCADE",
       },
-      item_id: {
+      available_item_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: { model: "items", key: "id" },
+        references: { model: "available_items", key: "id" },
       },
       status_id: {
         type: DataTypes.INTEGER,
@@ -168,6 +174,11 @@ module.exports = {
         references: { model: "statuses", key: "id" },
       },
       created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
@@ -193,6 +204,7 @@ module.exports = {
       { name: "pending" },
       { name: "approved" },
       { name: "rejected" },
+      { name: "out_of_stock" },
     ]);
   },
 

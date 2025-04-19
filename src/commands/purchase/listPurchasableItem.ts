@@ -9,12 +9,13 @@ import AvailableItems from "../../models/availableItem.model";
 import Items from "../../models/item.model";
 import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
+import { STRING_COMMANDS } from "..";
 
 export default class ListPurchasableItemsOnCurrentSeasonCommand
   implements Command
 {
   public data = new SlashCommandBuilder()
-    .setName("listar-itens-compraveis")
+    .setName(STRING_COMMANDS.LIST_PURCHASABLE_ITEM_FROM_CURRENT_SEASON)
     .setDescription(
       "Lista os itens disponíveis para compra na temporada atual.",
     );
@@ -25,7 +26,7 @@ export default class ListPurchasableItemsOnCurrentSeasonCommand
     interaction: ChatInputCommandInteraction,
   ): Promise<void> {
     const currentSeason = await Seasons.findOne({
-      where: { is_deleted: false, is_current: true },
+      where: { isDeleted: false, isCurrent: true },
     });
 
     if (!currentSeason) {
@@ -38,7 +39,7 @@ export default class ListPurchasableItemsOnCurrentSeasonCommand
 
     const items = await AvailableItems.findAll({
       where: {
-        season_id: currentSeason.id,
+        seasonId: currentSeason.id,
       },
       include: [{ model: Items, include: [Rarities] }],
       order: [["price", "ASC"]],
@@ -63,11 +64,11 @@ export default class ListPurchasableItemsOnCurrentSeasonCommand
       const rarity = item.rarity!;
 
       embed.addFields({
-        name: `🧪 ${item.name} — *${rarity.name_pt}*`,
+        name: `🧪 ${item.name} — *${rarity.namePt}*`,
         value: [
           `**💰 Preço:** ${available.price} PO`,
           `**📦 Quantidade disponível:** ${available.quantity}`,
-          `**🔁 Permite troca:** ${available.can_trade ? "Sim" : "Não"}`,
+          `**🔁 Permite troca:** ${available.canTrade ? "Sim" : "Não"}`,
           `\u200B`,
         ].join("\n"),
         inline: false,

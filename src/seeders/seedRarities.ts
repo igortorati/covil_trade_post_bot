@@ -2,15 +2,15 @@ import Rarity from "../models/rarity.model";
 import sequelize from "../config/database";
 
 const rarities = [
-  { id: "common", name_pt: "comum" },
-  { id: "uncommon", name_pt: "incomum" },
-  { id: "rare", name_pt: "raro" },
-  { id: "very rare", name_pt: "muito raro" },
-  { id: "legendary", name_pt: "lendário" },
-  { id: "artifact", name_pt: "artefato" },
-  { id: "none", name_pt: "nenhuma" },
-  { id: "varies", name_pt: "varia" },
-  { id: "unknown", name_pt: "indeterminado" },
+  { id: "none", namePt: "nenhuma", priority: 0 },
+  { id: "common", namePt: "comum", priority: 1 },
+  { id: "uncommon", namePt: "incomum", priority: 2 },
+  { id: "rare", namePt: "raro", priority: 3 },
+  { id: "very rare", namePt: "muito raro", priority: 4 },
+  { id: "legendary", namePt: "lendário", priority: 5 },
+  { id: "artifact", namePt: "artefato", priority: 6 },
+  { id: "varies", namePt: "varia", priority: 7 },
+  { id: "unknown", namePt: "indeterminado", priority: 8 },
 ];
 
 async function seedRarities() {
@@ -24,11 +24,11 @@ if (require.main === module) {
     .sync()
     .then(async () => {
       await seedRarities();
-      console.log("✅ Fontes inseridas com sucesso!");
+      console.log("✅ Raridades inseridas com sucesso!");
       process.exit(0);
     })
     .catch((err) => {
-      console.error("❌ Erro ao inserir fontes:", err);
+      console.error("❌ Erro ao inserir raridades:", err);
       process.exit(1);
     });
 }

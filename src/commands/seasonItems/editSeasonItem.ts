@@ -9,10 +9,11 @@ import AvailableItems from "../../models/availableItem.model";
 import Items from "../../models/item.model";
 import Seasons from "../../models/season.model";
 import { Op } from "sequelize";
+import { STRING_COMMANDS } from "..";
 
 export default class EditSeasonItemCommand implements Command {
   public data = new SlashCommandBuilder()
-    .setName("editar-item")
+    .setName(STRING_COMMANDS.EDIT_ITEM_IN_SEASON)
     .setDescription("Edita os detalhes de um item disponível.")
     .addIntegerOption((option) =>
       option
@@ -81,15 +82,15 @@ export default class EditSeasonItemCommand implements Command {
     console.log("!!trocaStr", !!trocaStr);
     console.log(
       '!!trocaStr ? trocaStr === "sim" : availableItem.can_trade',
-      !!trocaStr ? trocaStr === "sim" : availableItem.can_trade,
+      !!trocaStr ? trocaStr === "sim" : availableItem.canTrade,
     );
 
     const item = newItemId
       ? await Items.findByPk(newItemId)
-      : await Items.findByPk(availableItem.item_id);
+      : await Items.findByPk(availableItem.itemId);
     const season = newSeasonId
       ? await Seasons.findByPk(newSeasonId)
-      : await Seasons.findByPk(availableItem.season_id);
+      : await Seasons.findByPk(availableItem.seasonId);
 
     if (!item || !season) {
       await interaction.reply({
@@ -100,15 +101,15 @@ export default class EditSeasonItemCommand implements Command {
     }
 
     await availableItem.update({
-      item_id: item.id,
-      season_id: season.id,
+      itemId: item.id,
+      seasonId: season.id,
       quantity: newQuantidade ?? availableItem.quantity,
       price: newPreco ?? availableItem.price,
-      can_trade: !!trocaStr ? trocaStr === "sim" : availableItem.can_trade,
+      canTrade: !!trocaStr ? trocaStr === "sim" : availableItem.canTrade,
     });
 
     await interaction.reply({
-      content: `Item #${id} atualizado com sucesso.\nItem: ${item.name}\nTemporada: ${season.season}\nQuantidade: ${newQuantidade ?? availableItem.quantity}\nPreço: ${newPreco ?? availableItem.price}\nPermite Troca: ${(!!trocaStr ? trocaStr === "sim" : availableItem.can_trade) ? "Sim" : "Não"}`,
+      content: `Item #${id} atualizado com sucesso.\nItem: ${item.name}\nTemporada: ${season.season}\nQuantidade: ${newQuantidade ?? availableItem.quantity}\nPreço: ${newPreco ?? availableItem.price}\nPermite Troca: ${(!!trocaStr ? trocaStr === "sim" : availableItem.canTrade) ? "Sim" : "Não"}`,
       flags: ["Ephemeral"],
     });
   }
@@ -134,7 +135,7 @@ export default class EditSeasonItemCommand implements Command {
     } else if (focusedOption.name === "temporada") {
       const seasons = await Seasons.findAll({
         where: {
-          is_deleted: false,
+          isDeleted: false,
           season: { [Op.like]: `%${value}%` },
         },
         limit: 25,

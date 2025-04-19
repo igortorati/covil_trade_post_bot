@@ -8,6 +8,6 @@ export default class Character extends Model<Character> {
   @Column({ type: DataType.STRING(100), allowNull: false })
   name!: string;
 
-  @Column({ type: DataType.STRING(100), allowNull: false })
-  discord_id!: string;
+  @Column({ type: DataType.STRING(100), allowNull: false, field: "discord_id" })
+  discordId!: string;
 }

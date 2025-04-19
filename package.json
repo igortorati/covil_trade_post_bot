@@ -18,7 +18,8 @@
     "seed:rarities": "ts-node src/seeders/seedRarities.ts",
     "clean:sources": "tsx src/scripts/cleanBooks.ts",
     "clean:items": "tsx src/scripts/cleanItems.ts",
-    "start-from-scratch": "npm run migrate && npm run seed:all && npm run start"
+    "start-from-scratch": "npm run migrate && npm run seed:all && npm run start",
+    "migrate:undo:all": "sequelize-cli db:migrate:undo:all --config sequelize.config.js"
   },
   "author": "Igor H. T. Ruy",
   "dependencies": {

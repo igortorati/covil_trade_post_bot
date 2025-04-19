@@ -33,7 +33,7 @@ export default class AddCharacterCommand implements Command {
     const nome = interaction.options.getString("nome", true);
 
     await Characters.create({
-      discord_id: user.id,
+      discordId: user.id,
       name: nome,
     } as Characters);
 

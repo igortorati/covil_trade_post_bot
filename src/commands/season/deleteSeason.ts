@@ -6,10 +6,11 @@ import {
 import { Command } from "../commands";
 import { RateLimiter } from "discord.js-rate-limiter";
 import Seasons from "../../models/season.model";
+import { STRING_COMMANDS } from "..";
 
 export default class DeleteSeasonCommand implements Command {
   public data = new SlashCommandBuilder()
-    .setName("desativar-temporada")
+    .setName(STRING_COMMANDS.DEACTIVATE_SEASON)
     .setDescription("Desativa uma temporada e a define como não ativa.")
     .addStringOption((option) =>
       option
@@ -27,11 +28,11 @@ export default class DeleteSeasonCommand implements Command {
     const season = interaction.options.getString("temporada", true);
 
     const temporada = await Seasons.findOne({
-      where: { season, is_deleted: false },
+      where: { season, isDeleted: false },
     });
 
     if (temporada) {
-      await temporada.update({ is_deleted: true, is_current: false });
+      await temporada.update({ isDeleted: true, isCurrent: false });
       await interaction.reply({
         content: `Temporada ${season} desativada com sucesso.`,
         flags: ["Ephemeral"],
@@ -50,7 +51,7 @@ export default class DeleteSeasonCommand implements Command {
     const focused = interaction.options.getFocused().toLowerCase();
 
     const temporadas = await Seasons.findAll({
-      where: { is_deleted: false },
+      where: { isDeleted: false },
       order: [["season", "ASC"]],
       limit: 25,
     });

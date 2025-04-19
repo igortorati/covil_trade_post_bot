@@ -9,10 +9,11 @@ import Items from "../../models/item.model";
 import Seasons from "../../models/season.model";
 import AvailableItems from "../../models/availableItem.model";
 import { Op } from "sequelize";
+import { STRING_COMMANDS } from "..";
 
 export default class AddSeasonItemCommand implements Command {
   public data = new SlashCommandBuilder()
-    .setName("adicionar-item")
+    .setName(STRING_COMMANDS.ADD_ITEM_TO_SEASON)
     .setDescription("Adiciona um item disponível para uma temporada.")
     .addStringOption((option) =>
       option
@@ -79,11 +80,11 @@ export default class AddSeasonItemCommand implements Command {
     const permiteTroca = permiteTrocaRaw === "sim";
 
     await AvailableItems.create({
-      item_id: item.id,
-      season_id: season.id,
+      itemId: item.id,
+      seasonId: season.id,
       quantity: quantidade,
       price: preco,
-      can_trade: permiteTroca,
+      canTrade: permiteTroca,
     } as AvailableItems);
 
     await interaction.reply({
@@ -113,7 +114,7 @@ export default class AddSeasonItemCommand implements Command {
     } else if (focusedOption.name === "temporada") {
       const seasons = await Seasons.findAll({
         where: {
-          is_deleted: false,
+          isDeleted: false,
           season: { [Op.like]: `%${value}%` },
         },
         limit: 25,

@@ -15,6 +15,9 @@ export default class Rarity extends Model {
   @Column({ type: DataType.STRING(20) })
   id!: string;
 
-  @Column({ type: DataType.STRING(20), allowNull: false })
-  name_pt!: string;
+  @Column({ type: DataType.STRING(20), allowNull: false, field: "name_pt" })
+  namePt!: string;
+
+  @Column({ type: DataType.INTEGER, allowNull: false, unique: true })
+  priority!: number;
 }
