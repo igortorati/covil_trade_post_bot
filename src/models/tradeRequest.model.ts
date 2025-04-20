@@ -68,6 +68,6 @@ export default class TradeRequest extends Model<TradeRequest> {
   })
   updatedAt!: Date;
 
-  @Column({ type: DataType.STRING(100), allowNull: false, field: "updated_by" })
+  @Column({ type: DataType.STRING(100), allowNull: true, field: "updated_by" })
   updatedBy!: string;
 }

@@ -3,6 +3,7 @@ version: "3.8"
 services:
   app:
     build: .
+    restart: always
     env_file: .env
     container_name: tradepost-app
     volumes:
@@ -12,7 +13,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    command: npm run start
+    command: npm run start-and-seed
 
   db:
     image: mysql:8

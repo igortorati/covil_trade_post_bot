@@ -57,6 +57,6 @@ export default class PurchaseRequest extends Model<PurchaseRequest> {
   })
   updatedAt!: Date;
 
-  @Column({ type: DataType.STRING(100), allowNull: false, field: "updated_by" })
+  @Column({ type: DataType.STRING(100), allowNull: true, field: "updated_by" })
   updatedBy!: string;
 }

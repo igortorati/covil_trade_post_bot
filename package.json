@@ -18,7 +18,7 @@
     "seed:rarities": "ts-node src/seeders/seedRarities.ts",
     "clean:sources": "tsx src/scripts/cleanBooks.ts",
     "clean:items": "tsx src/scripts/cleanItems.ts",
-    "start-from-scratch": "npm run migrate && npm run seed:all && npm run start",
+    "start-and-seed": "tsc && node dist/config/waitDb.js && npm run migrate && npm run seed:all && npm run start",
     "clear:commands": "ts-node src/clearCommands.ts"
   },
   "author": "Igor H. T. Ruy",
@@ -31,6 +31,7 @@
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.2",
     "sequelize-typescript": "^2.1.6",
+    "wait-port": "^1.1.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

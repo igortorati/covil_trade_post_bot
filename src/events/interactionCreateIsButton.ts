@@ -25,7 +25,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       if (!request) {
         await interaction.reply({
           content: "🔁 Requisição de troca não encontrada.",
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
         return;
       }
@@ -33,7 +33,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       if (request.statusId !== TradeRequestStatus.PENDING) {
         await interaction.reply({
           content: "⚠️ Esta troca já foi processada anteriormente.",
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
         return;
       }
@@ -46,7 +46,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
           await request.save();
           await interaction.reply({
             content: "❌ Não foi possível aprovar a troca: item desejado esgotado.",
-            ephemeral: true,
+            flags: ["Ephemeral"],
           });
           return;
         }
@@ -59,7 +59,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
         await interaction.reply({
           content: `✅ Troca aprovada com sucesso para **${request.character?.name}**!`,
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
       }
 
@@ -69,7 +69,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await request.save();
         await interaction.reply({
           content: "❌ Troca rejeitada.",
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
       }
     }
@@ -82,7 +82,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       if (!request) {
         await interaction.reply({
           content: "🛒 Requisição de compra não encontrada.",
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
         return;
       }
@@ -90,7 +90,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       if (request.statusId !== TradeRequestStatus.PENDING) {
         await interaction.reply({
           content: "⚠️ Esta compra já foi processada anteriormente.",
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
         return;
       }
@@ -103,7 +103,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
           await request.save();
           await interaction.reply({
             content: "❌ Não foi possível aprovar a compra: item esgotado.",
-            ephemeral: true,
+            flags: ["Ephemeral"],
           });
           return;
         }
@@ -116,7 +116,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
         await interaction.reply({
           content: `✅ Compra aprovada com sucesso para **${request.character?.name}**!`,
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
       }
 
@@ -126,7 +126,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await request.save();
         await interaction.reply({
           content: "❌ Compra rejeitada.",
-          ephemeral: true,
+          flags: ["Ephemeral"],
         });
       }
     }
