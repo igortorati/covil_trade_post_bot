@@ -66,8 +66,9 @@ export default class ListSeasonItemsCommand implements Command {
       const rarity = item.rarity!;
 
       embed.addFields({
-        name: `🧪 ${item.name} — *${rarity.namePt}*`,
+        name: `🆔 ID: ${ai.id}`,
         value: [
+          `**🧪 ${item.name}** — *${rarity.namePt}*`,
           `**💰 Preço:** ${ai.price} PO`,
           `**📦 Quantidade disponível:** ${ai.quantity}`,
           `**🔁 Permite troca:** ${ai.canTrade ? "Sim" : "Não"}`,
