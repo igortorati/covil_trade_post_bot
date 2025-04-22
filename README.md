@@ -4,6 +4,29 @@ This project was created for a group of Dungeon Masters (DMs) for the Dungeons &
 
 Most of the messages and commands are displayed in Portuguese (PT-BR) as the focus is on a Brazilian DM group.
 
+## Prerequisites
+
+Before running the application, make sure you have the following installed:
+
+- **Docker**: The application uses Docker for containerization. You can download it from [here](https://www.docker.com/get-started).
+- **Docker Compose**: Docker Compose is used to manage multi-container Docker applications. It is bundled with Docker Desktop.
+
+## How to Run the Application
+
+To run the bot and its associated services, follow these steps:
+
+1. Clone the repository to your local machine.
+
+2. Ensure you have a `.env` file in the root directory with the necessary environment variables for your database configuration:
+   - `DB_PASSWORD`: Password for the MySQL root user.
+   - `DB_DATABASE`: The name of the database.
+
+3. Run the following command to start the application using Docker Compose:
+
+   ```bash
+   docker compose up -d
+
+
 ## Player Commands
 
 1. **/compra [Character] [Desired Item]**  
