@@ -27,7 +27,6 @@
     "discord.js-rate-limiter": "^1.3.2",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "http": "^0.0.1-security",
     "mysql2": "^3.14.0",
     "prettier": "^3.5.3",
     "sequelize": "^6.37.7",

@@ -10,7 +10,7 @@ services:
       - .:/app
       - /app/node_modules
     environment:
-    - APP_EXPOSED_PORT=${APP_EXPOSED_PORT}
+      - APP_EXPOSED_PORT=${APP_EXPOSED_PORT}
     ports:
       - "${APP_EXPOSED_PORT}:${APP_EXPOSED_PORT}"
     command: npm run start
