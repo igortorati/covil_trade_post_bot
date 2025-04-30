@@ -7,6 +7,7 @@ import "./events/interactionCreateIsAutocomplete";
 import "./events/interactionCreateIsButton";
 import "./events/interactionCreateIsChatInputCommand";
 import "./events/interactionCreateIsModalSubmit";
+import "./scripts/healthCheck";
 
 async function init() {
   client.login(config.discord.token);
