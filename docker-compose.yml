@@ -9,6 +9,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    environment:
+    - APP_EXPOSED_PORT=${APP_EXPOSED_PORT}
     ports:
-      - "3000:3000"
-    command: npm run start-and-seed
+      - "${APP_EXPOSED_PORT}:${APP_EXPOSED_PORT}"
+    command: npm run start

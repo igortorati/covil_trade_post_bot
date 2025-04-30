@@ -18,6 +18,9 @@ const envSchema = z.object({
   DB_USERNAME: z.string(),
   DB_PASSWORD: z.string(),
   DB_DATABASE: z.string(),
+  APP_EXPOSED_PORT: z.string()
+    .transform(Number),
+  APP_HOST: z.string(),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -43,4 +46,8 @@ export const config = {
     password: parsed.data.DB_PASSWORD,
     database: parsed.data.DB_DATABASE,
   },
+  app: {
+    appExposedPort: parsed.data.APP_EXPOSED_PORT,
+    appHost: parsed.data.APP_HOST
+  }
 };
