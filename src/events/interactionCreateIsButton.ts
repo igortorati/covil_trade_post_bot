@@ -45,7 +45,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
           request.updatedBy = userId;
           await request.save();
           await interaction.reply({
-            content: "❌ Não foi possível aprovar a troca: item desejado esgotado.",
+            content:
+              "❌ Não foi possível aprovar a troca: item desejado esgotado.",
             flags: ["Ephemeral"],
           });
           return;
@@ -76,7 +77,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
     if (type === "purchase") {
       const request = await PurchaseRequest.findByPk(requestId, {
-        include: [{ model: AvailableItem, include: [Item] }, { model: Character }],
+        include: [
+          { model: AvailableItem, include: [Item] },
+          { model: Character },
+        ],
       });
 
       if (!request) {

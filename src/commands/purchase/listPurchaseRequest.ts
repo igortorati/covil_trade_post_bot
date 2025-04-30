@@ -50,7 +50,7 @@ export default class ListPurchaseRequestsCommand implements Command {
           model: Characters,
         },
       ],
-      limit: 5
+      limit: 5,
     });
 
     if (requests.length === 0) {
@@ -86,12 +86,13 @@ export default class ListPurchaseRequestsCommand implements Command {
           value: season.season,
           inline: true,
         },
-      ]
-      
+      ];
+
       if (item?.category === "upgrade") {
         fields.push({
           name: "⚠️ Atenção",
-          value: "**```🔴 Verifique se o jogador possui o item necessário ou ouro para comprá-lo.```**",
+          value:
+            "**```🔴 Verifique se o jogador possui o item necessário ou ouro para comprá-lo.```**",
           inline: false,
         });
       }

@@ -11,21 +11,4 @@ services:
       - /app/node_modules
     ports:
       - "3000:3000"
-    depends_on:
-      - db
     command: npm run start-and-seed
-
-  db:
-    image: mysql:8
-    container_name: tradepost-db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-    ports:
-      - "3306:3306"
-    volumes:
-      - db-data:/var/lib/mysql
-
-volumes:
-  db-data:

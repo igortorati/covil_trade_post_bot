@@ -41,7 +41,7 @@ export default class ListPurchasableItemsOnCurrentSeasonCommand
     const items = await AvailableItems.findAll({
       where: {
         seasonId: currentSeason.id,
-        quantity: { [Op.gt]: 0 }
+        quantity: { [Op.gt]: 0 },
       },
       include: [{ model: Items, include: [Rarities] }],
       order: [["price", "ASC"]],

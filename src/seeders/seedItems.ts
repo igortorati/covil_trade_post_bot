@@ -20,8 +20,8 @@ export async function seedItems() {
     Rarity.findAll({ order: [["priority", "ASC"]] }),
   ]);
 
-  await createItems(allRarities, allSources)
-  await createUpgrades(allRarities)
+  await createItems(allRarities, allSources);
+  await createUpgrades(allRarities);
 }
 
 async function createItems(allRarities: Rarity[], allSources: Source[]) {
@@ -53,11 +53,14 @@ async function createItems(allRarities: Rarity[], allSources: Source[]) {
 }
 
 async function createUpgrades(allRarities: Rarity[]) {
-  const upgradeRaritiesOffset = 1
+  const upgradeRaritiesOffset = 1;
   const upgradeItems = ["Weapon", "Armor", "Shield"].flatMap((type) => {
     return [1, 2, 3].map((bonus) => {
-      const rarityId = allRarities[bonus + upgradeRaritiesOffset].id ?? allRarities[8];
-  
+      const rarityId =
+        allRarities[
+          (type == "Armor" ? bonus + 1 : bonus) + upgradeRaritiesOffset
+        ].id ?? allRarities[8];
+
       return {
         name: `+${bonus} ${type}`,
         sourceId: "PHB",
