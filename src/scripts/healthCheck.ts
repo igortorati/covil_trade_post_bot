@@ -5,7 +5,7 @@ const port = config.app.appExposedPort || 8000
 
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    message: 'Hello, world!',
+    message: 'App is online!',
   })
 })
 
