@@ -21,6 +21,7 @@ const envSchema = z.object({
   APP_EXPOSED_PORT: z.string().transform(Number),
   APP_HOST: z.string(),
   HEALTH_CHECK_DELAY: z.string().transform(Number),
+  EMBED_SESSION_DURATION: z.string().default("5").transform(Number),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -49,6 +50,7 @@ export const config = {
   app: {
     appExposedPort: parsed.data.APP_EXPOSED_PORT,
     appHost: parsed.data.APP_HOST,
-    healthCheckDelay: parsed.data.HEALTH_CHECK_DELAY
+    healthCheckDelay: parsed.data.HEALTH_CHECK_DELAY,
+    embedSessionDuration: parsed.data.EMBED_SESSION_DURATION,
   },
 };

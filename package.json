@@ -7,7 +7,7 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "dev": "tsx watch src/index.ts",
-    "deploy-commands": "tsx src/deployCommands.ts",
+    "deploy-commands": "tsx src/scripts/deployCommands.ts",
     "reset": "rimraf node_modules package-lock.json && npm install",
     "build": "tsc",
     "migrate": "sequelize-cli db:migrate --config sequelize.config.js",
@@ -45,5 +45,14 @@
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igortorati/covil_trade_post_bot.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/igortorati/covil_trade_post_bot/issues"
+  },
+  "homepage": "https://github.com/igortorati/covil_trade_post_bot#readme"
 }

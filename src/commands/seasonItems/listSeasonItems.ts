@@ -1,8 +1,10 @@
 import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
   AutocompleteInteraction,
-  EmbedBuilder,
 } from "discord.js";
 import { Command } from "../commands";
 import { RateLimiter } from "discord.js-rate-limiter";
@@ -10,8 +12,10 @@ import AvailableItems from "../../models/availableItem.model";
 import Items from "../../models/item.model";
 import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
-import { Op } from "sequelize";
 import { STRING_COMMANDS } from "..";
+import { Op } from "sequelize";
+import { createPaginatedEmbeds } from "../../utils/paginatedListItemsEmbed";
+import { handleEmbedPagination } from "../../utils/handleEmbedListItemsPagination";
 
 export default class ListSeasonItemsCommand implements Command {
   public data = new SlashCommandBuilder()
@@ -27,24 +31,23 @@ export default class ListSeasonItemsCommand implements Command {
 
   public cooldown = new RateLimiter(1, 5000);
 
-  public async execute(
-    interaction: ChatInputCommandInteraction,
-  ): Promise<void> {
+  public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const seasonId = interaction.options.getString("temporada", true);
 
     const season = await Seasons.findOne({
       where: { id: seasonId, isDeleted: false },
     });
+
     if (!season) {
       await interaction.reply({
-        content: "Temporada não encontrada.",
+        content: "❌ Temporada não encontrada.",
         flags: ["Ephemeral"],
       });
       return;
     }
 
     const availableItems = await AvailableItems.findAll({
-      where: { seasonId: seasonId },
+      where: { seasonId },
       include: [{ model: Items, include: [Rarities] }],
       order: [[{ model: Items, as: "item" }, "name", "ASC"]],
     });
@@ -57,28 +60,35 @@ export default class ListSeasonItemsCommand implements Command {
       return;
     }
 
-    const embed = new EmbedBuilder()
-      .setTitle(`📦 Itens disponíveis – Temporada: ${season.season}`)
-      .setColor("Blurple");
+    const embeds = createPaginatedEmbeds(availableItems, season.season);
 
-    for (const ai of availableItems) {
-      const item = ai.item!;
-      const rarity = item.rarity!;
+    await interaction.reply({
+      embeds: [embeds[0]],
+      components: embeds.length > 1 ? [
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId("prev")
+            .setLabel("⬅️ Anterior")
+            .setStyle(ButtonStyle.Primary)
+            .setDisabled(true),
+          new ButtonBuilder()
+            .setCustomId("page")
+            .setLabel(`📖 ${1} / ${embeds.length}`)
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(true),
+          new ButtonBuilder()
+            .setCustomId("next")
+            .setLabel("Próxima ➡️")
+            .setStyle(ButtonStyle.Primary)
+            .setDisabled(embeds.length <= 1),
+        ),
+      ] : [],
+      flags: ["Ephemeral"],
+    });
 
-      embed.addFields({
-        name: `🆔 ID: ${ai.id}`,
-        value: [
-          `**🧪 ${item.name}** — *${rarity.namePt}*`,
-          `**💰 Preço:** ${ai.price} PO`,
-          `**📦 Quantidade disponível:** ${ai.quantity}`,
-          `**🔁 Permite troca:** ${ai.canTrade ? "Sim" : "Não"}`,
-          `\u200B`, // espaço visual entre blocos
-        ].join("\n"),
-        inline: false,
-      });
-    }
+    const reply = await interaction.fetchReply()
 
-    await interaction.reply({ embeds: [embed], flags: ["Ephemeral"] });
+    await handleEmbedPagination(interaction, reply, embeds);
   }
 
   public async autocomplete(
