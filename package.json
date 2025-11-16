@@ -12,6 +12,7 @@
     "build": "tsc",
     "migrate": "sequelize-cli db:migrate --config sequelize.config.js",
     "start": "npm run migrate && npm run dev",
+    "generate-items": "ts-node src/scripts/extractItemsFrom5eToolsList.ts",
     "seed:all": "npm run seed:sources && npm run seed:rarities && npm run seed:items",
     "seed:sources": "ts-node src/seeders/seedSources.ts",
     "seed:items": "ts-node src/seeders/seedItems.ts",

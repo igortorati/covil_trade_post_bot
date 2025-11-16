@@ -47,6 +47,38 @@ export default class Item extends Model<Item> {
     allowNull: false,
   })
   category!: "item" | "upgrade";
+  
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    field: "is_consumable",
+  })
+  isConsumable!: boolean;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    field: "is_magical",
+  })
+  isMagical!: boolean;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    field: "is_mundane",
+  })
+  isMundane!: boolean;
+  
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    field: "is_legacy",
+  })
+  isLegacy!: boolean;
 
   @HasMany(() => AvailableItem)
   availableItems!: AvailableItem[];

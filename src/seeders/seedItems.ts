@@ -5,13 +5,7 @@ import Item from "../models/item.model";
 import Source from "../models/source.model";
 import Rarity from "../models/rarity.model";
 import { rarities } from "./seedRarities";
-
-interface RawItem {
-  name: string;
-  source?: string;
-  rarity?: string;
-  description?: string;
-}
+import { RawItem } from "../interfaces/rawItemInterface";
 
 export async function seedItems() {
   // Carrega fontes e raridades válidas
@@ -42,12 +36,17 @@ async function createItems(allRarities: Rarity[], allSources: Source[]) {
       name: item.name,
       sourceId: source,
       rarityId: rarity,
-      description: item.description || null,
       category: "item",
+      isConsumable: item.isConsumable,
+      isMagical: item.isMagical,
+      isMundane: item.isMundane,
+      isLegacy: item.isLegacy,
     };
   });
 
-  await Item.bulkCreate(combinedItems as any, { ignoreDuplicates: true });
+  console.log(`Saving ${combinedItems.length + 1} items on database.`)
+
+  await Item.bulkCreate(combinedItems as any);
 
   console.log("✅ Itens inseridos com sucesso!");
 }
@@ -63,10 +62,14 @@ async function createUpgrades(allRarities: Rarity[]) {
 
       return {
         name: `+${bonus} ${type}`,
-        sourceId: "PHB",
+        sourceId: "XPHB",
         rarityId: rarityId,
         description: `Um(a) ${type.toLowerCase()} com bônus de +${bonus}.`,
         category: "upgrade",
+        isConsumable: false,
+        isMagical: true,
+        isMundane: false,
+        isLegacy: false,
       };
     });
   });

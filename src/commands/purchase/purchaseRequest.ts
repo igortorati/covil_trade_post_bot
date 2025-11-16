@@ -11,7 +11,7 @@ import AvailableItems from "../../models/availableItem.model";
 import Items from "../../models/item.model";
 import Seasons from "../../models/season.model";
 import PurchaseRequest from "../../models/purchaseRequest.model";
-import { Op } from "sequelize";
+import { literal, Op } from "sequelize";
 import { TradeRequestStatus } from "../../utils/requestStatus";
 import { STRING_COMMANDS } from "..";
 
@@ -153,13 +153,20 @@ export default class PurchaseRequestCommand implements Command {
             where: {
               name: { [Op.like]: `%${value}%` },
             },
+            order: [
+              [
+                literal(`CASE WHEN name = '${value}' THEN 0 ELSE 1 END`),
+                'ASC'
+              ],
+              ['name', 'ASC']
+            ],
           },
         ],
         limit: 25,
       });
 
       const choices = availableItems.map((ai) => ({
-        name: ai.item!.name,
+        name: `${ai.item!.isLegacy ? "(Old - " + ai.item!.sourceId + ") " : ai.item!.sourceId ? "(" + ai.item!.sourceId + ")" : ""} ${ai.item!.name}`,
         value: ai.id.toString(),
       }));
 
