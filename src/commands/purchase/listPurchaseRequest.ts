@@ -167,6 +167,15 @@ export default class ListPurchaseRequestsCommand implements Command {
           });
           return;
         }
+        const availableItem = await AvailableItems.findByPk(req.availableItem?.id);
+        if (!availableItem) {
+          await btnInt.reply({
+            content: "⚠️ Não foi possível realizar a operação, o item desejado não foi encontrado.",
+          });
+          return;
+        }
+        availableItem.quantity--;
+        await availableItem.save();
 
         req.statusId = TradeRequestStatus.APPROVED;
         await req.save();
