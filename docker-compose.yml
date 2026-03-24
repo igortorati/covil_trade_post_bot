@@ -1,16 +1,11 @@
-version: "3.8"
-
 services:
   app:
-    build: .
-    restart: always
-    env_file: .env
+    image: ghcr.io/igortorati/covil_trade_post_bot:latest
     container_name: tradepost-app
-    volumes:
-      - .:/app
-      - /app/node_modules
+    restart: always
     environment:
-      - APP_EXPOSED_PORT=${APP_EXPOSED_PORT}
+      APP_EXPOSED_PORT: ${APP_EXPOSED_PORT}
     ports:
-      - "${APP_EXPOSED_PORT}:${APP_EXPOSED_PORT}"
+      - "${APP_EXPOSED_PORT:-3000}:${APP_EXPOSED_PORT:-3000}"
     command: npm run start
+    stop_grace_period: 30s
