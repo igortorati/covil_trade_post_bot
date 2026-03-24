@@ -8,7 +8,7 @@ import { RateLimiter } from "discord.js-rate-limiter";
 import Items from "../../models/item.model";
 import Seasons from "../../models/season.model";
 import AvailableItems from "../../models/availableItem.model";
-import { Op } from "sequelize";
+import { literal, Op } from "sequelize";
 import { STRING_COMMANDS } from "..";
 
 export default class AddSeasonItemCommand implements Command {
@@ -104,10 +104,17 @@ export default class AddSeasonItemCommand implements Command {
         where: {
           name: { [Op.like]: `%${value}%` },
         },
+        order: [
+          [
+            literal(`CASE WHEN name = '${value}' THEN 0 ELSE 1 END`),
+            'ASC'
+          ],
+          ['name', 'ASC']
+        ],
         limit: 25,
       });
       const choices = items.map((item) => ({
-        name: item.name,
+        name: `${item.sourceId ? "(" + item.sourceId + ") " : ""} ${item.name}`,
         value: item.id.toString(),
       }));
       await interaction.respond(choices);

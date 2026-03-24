@@ -7,11 +7,12 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "dev": "tsx watch src/index.ts",
-    "deploy-commands": "tsx src/deployCommands.ts",
+    "deploy-commands": "tsx src/scripts/deployCommands.ts",
     "reset": "rimraf node_modules package-lock.json && npm install",
     "build": "tsc",
     "migrate": "sequelize-cli db:migrate --config sequelize.config.js",
     "start": "npm run migrate && npm run dev",
+    "generate-items": "ts-node src/scripts/extractItemsFrom5eToolsList.ts",
     "seed:all": "npm run seed:sources && npm run seed:rarities && npm run seed:items",
     "seed:sources": "ts-node src/seeders/seedSources.ts",
     "seed:items": "ts-node src/seeders/seedItems.ts",
@@ -26,7 +27,9 @@
     "discord.js": "^14.18.0",
     "discord.js-rate-limiter": "^1.3.2",
     "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "mysql2": "^3.14.0",
+    "node-fetch": "^3.3.2",
     "prettier": "^3.5.3",
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.2",
@@ -35,6 +38,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
     "rimraf": "^6.0.1",
     "sequelize-typescript-migration": "^0.0.1-beta.3",
@@ -42,5 +46,14 @@
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igortorati/covil_trade_post_bot.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/igortorati/covil_trade_post_bot/issues"
+  },
+  "homepage": "https://github.com/igortorati/covil_trade_post_bot#readme"
 }

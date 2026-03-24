@@ -5,13 +5,7 @@ import Item from "../models/item.model";
 import Source from "../models/source.model";
 import Rarity from "../models/rarity.model";
 import { rarities } from "./seedRarities";
-
-interface RawItem {
-  name: string;
-  source?: string;
-  rarity?: string;
-  description?: string;
-}
+import { RawItem } from "../interfaces/rawItemInterface";
 
 export async function seedItems() {
   // Carrega fontes e raridades válidas
@@ -20,8 +14,8 @@ export async function seedItems() {
     Rarity.findAll({ order: [["priority", "ASC"]] }),
   ]);
 
-  await createItems(allRarities, allSources)
-  await createUpgrades(allRarities)
+  await createItems(allRarities, allSources);
+  await createUpgrades(allRarities);
 }
 
 async function createItems(allRarities: Rarity[], allSources: Source[]) {
@@ -42,28 +36,40 @@ async function createItems(allRarities: Rarity[], allSources: Source[]) {
       name: item.name,
       sourceId: source,
       rarityId: rarity,
-      description: item.description || null,
       category: "item",
+      isConsumable: item.isConsumable,
+      isMagical: item.isMagical,
+      isMundane: item.isMundane,
+      isLegacy: item.isLegacy,
     };
   });
 
-  await Item.bulkCreate(combinedItems as any, { ignoreDuplicates: true });
+  console.log(`Saving ${combinedItems.length + 1} items on database.`)
+
+  await Item.bulkCreate(combinedItems as any);
 
   console.log("✅ Itens inseridos com sucesso!");
 }
 
 async function createUpgrades(allRarities: Rarity[]) {
-  const upgradeRaritiesOffset = 1
+  const upgradeRaritiesOffset = 1;
   const upgradeItems = ["Weapon", "Armor", "Shield"].flatMap((type) => {
     return [1, 2, 3].map((bonus) => {
-      const rarityId = allRarities[bonus + upgradeRaritiesOffset].id ?? allRarities[8];
-  
+      const rarityId =
+        allRarities[
+          (type == "Armor" ? bonus + 1 : bonus) + upgradeRaritiesOffset
+        ].id ?? allRarities[8];
+
       return {
         name: `+${bonus} ${type}`,
-        sourceId: "PHB",
+        sourceId: "XPHB",
         rarityId: rarityId,
         description: `Um(a) ${type.toLowerCase()} com bônus de +${bonus}.`,
         category: "upgrade",
+        isConsumable: false,
+        isMagical: true,
+        isMundane: false,
+        isLegacy: false,
       };
     });
   });

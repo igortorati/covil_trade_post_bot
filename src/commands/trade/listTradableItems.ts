@@ -2,6 +2,9 @@ import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
   EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } from "discord.js";
 import { Command } from "../commands";
 import { RateLimiter } from "discord.js-rate-limiter";
@@ -11,6 +14,8 @@ import Rarities from "../../models/rarity.model";
 import Seasons from "../../models/season.model";
 import { STRING_COMMANDS } from "..";
 import { Op } from "sequelize";
+import { createPaginatedEmbeds } from "../../utils/paginatedListItemsEmbed";
+import { handleEmbedPagination } from "../../utils/handleEmbedListItemsPagination";
 
 export default class ListTradableItemsOnCurrentSeasonCommand
   implements Command
@@ -42,7 +47,7 @@ export default class ListTradableItemsOnCurrentSeasonCommand
       where: {
         seasonId: currentSeason.id,
         canTrade: true,
-        quantity: { [Op.gt]: 0 }
+        quantity: { [Op.gt]: 0 },
       },
       include: [{ model: Items, include: [Rarities] }],
       order: [["price", "ASC"]],
@@ -56,27 +61,34 @@ export default class ListTradableItemsOnCurrentSeasonCommand
       return;
     }
 
-    const embed = new EmbedBuilder()
-      .setTitle(
-        `📦 Itens disponíveis para **troca** – Temporada: ${currentSeason.season}`,
-      )
-      .setColor("Gold");
+    const embeds = createPaginatedEmbeds(items, currentSeason.season);
+    
+    await interaction.reply({
+      embeds: [embeds[0]],
+      components: embeds.length > 1 ? [
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId("prev")
+            .setLabel("⬅️ Anterior")
+            .setStyle(ButtonStyle.Primary)
+            .setDisabled(true),
+          new ButtonBuilder()
+            .setCustomId("page")
+            .setLabel(`📖 ${1} / ${embeds.length}`)
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(true),
+          new ButtonBuilder()
+            .setCustomId("next")
+            .setLabel("Próxima ➡️")
+            .setStyle(ButtonStyle.Primary)
+            .setDisabled(embeds.length <= 1),
+        ),
+      ] : [],
+      flags: ["Ephemeral"],
+    });
 
-    for (const available of items) {
-      const item = available.item!;
-      const rarity = item.rarity!;
+    const reply = await interaction.fetchReply()
 
-      embed.addFields({
-        name: `🧪 ${item.name} — *${rarity.namePt}*`,
-        value: [
-          `**💰 Preço:** ${available.price} PO`,
-          `**📦 Quantidade disponível:** ${available.quantity}`,
-          `\u200B`, // caractere invisível para espaçar visualmente
-        ].join("\n"),
-        inline: false,
-      });
-    }
-
-    await interaction.reply({ embeds: [embed], flags: ["Ephemeral"] });
+    await handleEmbedPagination(interaction, reply, embeds);
   }
 }

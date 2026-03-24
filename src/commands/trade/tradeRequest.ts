@@ -11,7 +11,7 @@ import AvailableItems from "../../models/availableItem.model";
 import Items from "../../models/item.model";
 import Seasons from "../../models/season.model";
 import TradeRequests from "../../models/tradeRequest.model";
-import { Op } from "sequelize";
+import { literal, Op } from "sequelize";
 import TradeRequest from "../../models/tradeRequest.model";
 import { TradeRequestStatus } from "../../utils/requestStatus";
 import Rarities from "../../models/rarity.model";
@@ -189,6 +189,13 @@ export default class TradeRequestCommand implements Command {
             where: {
               name: { [Op.like]: `%${value}%` },
             },
+            order: [
+              [
+                literal(`CASE WHEN name = '${value}' THEN 0 ELSE 1 END`),
+                'ASC'
+              ],
+              ['name', 'ASC']
+            ],
             include: [Rarities],
           },
         ],
@@ -196,48 +203,51 @@ export default class TradeRequestCommand implements Command {
       });
 
       const choices = availableItems.map((ai) => ({
-        name: ai.item!.name,
+        name: `${ai.item!.isLegacy ? "(Old - " + ai.item!.sourceId + ") " : ai.item!.sourceId ? "(" + ai.item!.sourceId + ")" : ""} ${ai.item!.name}`,
         value: ai.id.toString(),
       }));
 
       await interaction.respond(choices);
     } else if (focusedOption.name === "item_oferecido") {
       const desiredAvailableItemId =
-        interaction.options.getString("item_desejado");
+        interaction.options.getString("item_oferecido");
       let items = [];
 
-      if (desiredAvailableItemId) {
-        const desiredAvailableItem = await AvailableItems.findOne({
-          where: {
-            id: desiredAvailableItemId,
-          },
-          include: [{ model: Items, include: ["rarity"] }],
-        });
+      const desiredAvailableItem = await AvailableItems.findOne({
+        where: {
+          id: desiredAvailableItemId || "",
+        },
+        include: [{ model: Items, include: ["rarity"] }],
+      });
 
-        const desiredItem = desiredAvailableItem?.item;
+      const desiredItem = desiredAvailableItem?.item;
 
-        let rarityFilter: string[] = [];
+      let rarityFilter: string[] = [];
 
-        if (desiredItem?.rarityId) {
-          rarityFilter = await getAllowedRaritiesFrom(desiredItem.rarityId);
-        }
-
-        items = await Items.findAll({
-          where: {
-            name: { [Op.like]: `%${value}%` },
-            ...(rarityFilter.length > 0 && {
-              rarityId: {
-                [Op.in]: rarityFilter,
-              },
-            }),
-          },
-          limit: 25,
-        });
-      } else {
-        items = await Items.findAll();
+      if (desiredItem?.rarityId) {
+        rarityFilter = await getAllowedRaritiesFrom(desiredItem.rarityId);
       }
+
+      items = await Items.findAll({
+        where: {
+          name: { [Op.like]: `%${value}%` },
+          ...(rarityFilter.length > 0 && {
+            rarityId: {
+              [Op.in]: rarityFilter,
+            },
+          }),
+        },
+        order: [
+          [
+            literal(`CASE WHEN name = '${value}' THEN 0 ELSE 1 END`),
+            'ASC'
+          ],
+          ['name', 'ASC']
+        ],
+        limit: 25,
+      });
       const choices = items.map((item) => ({
-        name: item.name,
+        name: `${item!.isLegacy ? "(Old - " + item!.sourceId + ") " : item!.sourceId ? "(" + item!.sourceId + ")" : ""} ${item!.name}`,
         value: item.id.toString(),
       }));
       await interaction.respond(choices);

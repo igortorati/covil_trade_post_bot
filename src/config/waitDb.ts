@@ -1,8 +1,13 @@
-import waitPort from 'wait-port';
+import waitPort from "wait-port";
+import { config } from "../config/config";
 
 async function checkDatabase() {
-  await waitPort({ host: 'db', port: 3306, timeout: 60000 });
-  console.log('MySQL is ready!');
+  await waitPort({
+    host: config.db.host,
+    port: config.db.port,
+    timeout: 60000,
+  });
+  console.log("MySQL is ready!");
 }
 
 checkDatabase();

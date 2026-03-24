@@ -18,6 +18,7 @@ To run the bot and its associated services, follow these steps:
 1. Clone the repository to your local machine.
 
 2. Ensure you have a `.env` file in the root directory with the necessary environment variables for your database configuration:
+
    - `DB_PASSWORD`: Password for the MySQL root user.
    - `DB_DATABASE`: The name of the database.
 
@@ -25,7 +26,7 @@ To run the bot and its associated services, follow these steps:
 
    ```bash
    docker compose up -d
-
+   ```
 
 ## Player Commands
 
