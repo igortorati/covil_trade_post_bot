@@ -1,7 +1,10 @@
-name: Build and Push to GHCR
+name: Build, Push and Deploy
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -28,7 +31,49 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
+        
+      - name: Sanity check Docker image
+        run: |
+          docker rm -f sanity-test || true
+          docker run --name sanity-test --env-file .env.dev -d \
+            ghcr.io/${{ github.repository }}:latest
+          sleep 5
+          docker logs sanity-test
+          docker rm -f sanity-test
+
+      - name: Deploy docker-compose to VPS
+        if: github.event_name != 'pull_request'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_DEPLOY_USER_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          source: "docker-compose.yml"
+          target: "${{ secrets.VPS_DEPLOY_PATH }}/"
+
+      - name: Run deploy commands on VPS
+        if: github.event_name != 'pull_request'
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_DEPLOY_USER_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          script: |
+            set -e
+            cd ${{ secrets.VPS_DEPLOY_PATH }}
+
+            # Login no GHCR usando PAT
+            echo "${{ secrets.GITHUB_VPS_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Pull da imagem atualizada
+            docker pull ghcr.io/${{ github.repository }}:latest
+
+            # Shutdown gracioso do container anterior e restart
+            docker compose down
+            docker compose up -d

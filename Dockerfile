@@ -16,6 +16,9 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
+
+STOPSIGNAL SIGTERM
+
 ARG PORT
 EXPOSE ${PORT:-8000}
 

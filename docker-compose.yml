@@ -8,3 +8,4 @@ services:
     ports:
       - "${APP_EXPOSED_PORT:-3000}:${APP_EXPOSED_PORT:-3000}"
     command: npm run start
+    stop_grace_period: 30s

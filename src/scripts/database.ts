@@ -8,3 +8,9 @@ export const start = async () => {
     console.error("Erro ao conectar com o banco:", error);
   }
 };
+
+export async function stop() {
+  await sequelize.close();
+
+  console.log("📦 Banco desconectado");
+}
