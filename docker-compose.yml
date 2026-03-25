@@ -3,9 +3,11 @@ services:
     image: ghcr.io/igortorati/covil_trade_post_bot:latest
     container_name: tradepost-app
     restart: always
+    env_file:
+      - .env
     environment:
       APP_EXPOSED_PORT: ${APP_EXPOSED_PORT}
     ports:
       - "${APP_EXPOSED_PORT:-3000}:${APP_EXPOSED_PORT:-3000}"
-    command: npm run start
+    command: node dist/index.js
     stop_grace_period: 30s
